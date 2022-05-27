@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { OrganismosModule } from './organismos/organismos.module';
+import { SectoresModule } from './sectores/sectores.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { OrganismosModule } from './organismos/organismos.module';
   }),
   UsuariosModule,
   OrganismosModule,
+  SectoresModule,
   ],
   controllers: [AppController],
   providers: [AppService],
