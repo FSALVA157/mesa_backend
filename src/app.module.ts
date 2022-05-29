@@ -6,7 +6,8 @@ import { AppService } from './app.service';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { OrganismosModule } from './organismos/organismos.module';
 import { SectoresModule } from './sectores/sectores.module';
-import { TiposTramiteModule } from './tipos_tramite/tipos_tramite.module';
+import { TiposTramiteModule } from './tipos-tramite/tipos-tramite.module';
+import { TramitesModule } from './tramites/tramites.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { TiposTramiteModule } from './tipos_tramite/tipos_tramite.module';
   OrganismosModule,
   SectoresModule,
   TiposTramiteModule,
+  TramitesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

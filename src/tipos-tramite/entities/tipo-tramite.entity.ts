@@ -1,9 +1,9 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity('tipos_tramite')
 export class TipoTramite {
     @PrimaryGeneratedColumn()
-    id_tipo_tramite
+    id_tipo_tramite: number;
 
     @Column({
         type: 'varchar',
@@ -11,7 +11,7 @@ export class TipoTramite {
         nullable: false,
         unique:true
     })
-    tipo_tramite
+    tipo_tramite: string;
 
 
     @CreateDateColumn()
@@ -21,5 +21,5 @@ export class TipoTramite {
     baja: Date;
 
     @UpdateDateColumn()
-    actualizado: Date;    
+    actualizado: Date; 
 }

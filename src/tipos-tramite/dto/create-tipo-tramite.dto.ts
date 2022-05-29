@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsString, MaxLength, MinLength } from "class-validator";
 
 export class CreateTipoTramiteDto {
-
+    
     @IsString()
     @IsNotEmpty()        
     @MaxLength(100)

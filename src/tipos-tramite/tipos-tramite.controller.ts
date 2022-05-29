@@ -1,7 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { TiposTramiteService } from './tipos_tramite.service';
-import { CreateTipoTramiteDto } from './dto/create-tipo_tramite.dto';
-import { UpdateTipoTramiteDto } from './dto/update-tipo_tramite.dto';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
+import { TiposTramiteService } from './tipos-tramite.service';
+import { CreateTipoTramiteDto } from './dto/create-tipo-tramite.dto';
+import { UpdateTipoTramiteDto } from './dto/update-tipo-tramite.dto';
 
 @Controller('tipos-tramite')
 export class TiposTramiteController {
@@ -22,7 +22,7 @@ export class TiposTramiteController {
     return this.tiposTramiteService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id') id: string, @Body() updateTiposTramiteDto: UpdateTipoTramiteDto) {
     return this.tiposTramiteService.update(+id, updateTiposTramiteDto);
   }
@@ -32,3 +32,7 @@ export class TiposTramiteController {
     return this.tiposTramiteService.remove(+id);
   }
 }
+function put(arg0: string) {
+  throw new Error('Function not implemented.');
+}
+

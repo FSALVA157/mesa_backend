@@ -13,12 +13,4 @@ export class Organismo {
     })
     organismo: string;
 
-    @CreateDateColumn()
-    alta: Date;
-
-    @DeleteDateColumn()
-    baja: Date;
-
-    @UpdateDateColumn()
-    actualizado: Date;
 }

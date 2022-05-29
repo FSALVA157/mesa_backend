@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { TiposTramiteService } from './tipos_tramite.service';
-import { TiposTramiteController } from './tipos_tramite.controller';
+import { TiposTramiteService } from './tipos-tramite.service';
+import { TiposTramiteController } from './tipos-tramite.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TipoTramite } from './entities/tipo_tramite.entity';
+import { TipoTramite } from './entities/tipo-tramite.entity';
 
 @Module({
   imports: [
