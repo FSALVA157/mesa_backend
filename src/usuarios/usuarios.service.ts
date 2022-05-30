@@ -18,8 +18,8 @@ export class UsuariosService {
     return await this.usuarioRepository.save(nuevo);
   }
 
-  findAll() {
-    return `This action returns all usuarios`;
+  async findAll(): Promise<[Usuario[], number]> {
+    return await this.usuarioRepository.findAndCount();
   }
 
   findOne(id: number) {
