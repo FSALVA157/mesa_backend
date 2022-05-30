@@ -5,6 +5,7 @@ import { UpdateOrganismoDto } from './dto/update-organismo.dto';
 import { Organismo } from './entities/organismo.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 
+
 @Injectable()
 export class OrganismosService {
   
@@ -27,6 +28,8 @@ export class OrganismosService {
 
   async findOne(id: number) {
     //const respuesta = await this.organismoRepository.findOneOrFail(id);
+    //const maximo = await this.organismoRepository.find({ select: [max("id_organismo")] });
+    //console.log("maximo", maximo);
     const respuesta = await this.organismoRepository.findOne(id);
     if (!respuesta) throw new NotFoundException("No se encontró el registro solicitado");
     return respuesta;

@@ -30,6 +30,7 @@ export class TramitesService {
   }
 
   async create(data: CreateTramiteDto): Promise<Tramite> {
+    
     const existe = await this.tramitesRepository.findOne({numero_tramite: data.numero_tramite});
     if(existe) throw new BadRequestException ("El tramite que intenta crear ya existe.");
     const nuevo = await this.tramitesRepository.create(data);
