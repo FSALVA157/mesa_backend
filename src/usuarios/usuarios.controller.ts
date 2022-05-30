@@ -22,7 +22,13 @@ export class UsuariosController {
     @Param('id')
     id: string
     ) {
-    return this.usuariosService.findOne(+id);
+      try {
+        return this.usuariosService.findOne(+id);
+        
+      } catch (error) {
+        throw new Error(error);
+        
+      }
   }
 
   @Patch(':id')
