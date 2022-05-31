@@ -37,13 +37,4 @@ export class Sector {
     organismo : Organismo;
     //FIN ORGANISMO
 
-    @CreateDateColumn()
-    alta: Date;
-
-    @DeleteDateColumn()
-    baja: Date;
-
-    @UpdateDateColumn()
-    actualizado: Date;    
-
 }

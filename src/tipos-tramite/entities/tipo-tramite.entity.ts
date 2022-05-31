@@ -14,12 +14,4 @@ export class TipoTramite {
     tipo_tramite: string;
 
 
-    @CreateDateColumn()
-    alta: Date;
-
-    @DeleteDateColumn()
-    baja: Date;
-
-    @UpdateDateColumn()
-    actualizado: Date; 
 }

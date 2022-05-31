@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { TipoTramite } from '../../tipos-tramite/entities/tipo-tramite.entity';
 import { Sector } from '../../sectores/entities/sector.entity';
 import { Usuario } from 'src/usuarios/entities/usuario.entity';
@@ -101,7 +101,14 @@ export class Tramite {
     usuario : Usuario;
     //FIN USUARIO
 
-    
+    @CreateDateColumn()
+    alta: Date;
+
+    @DeleteDateColumn()
+    baja: Date;
+
+    @UpdateDateColumn()
+    actualizado: Date;
 
 
 

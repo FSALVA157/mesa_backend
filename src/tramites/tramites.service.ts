@@ -13,6 +13,7 @@ export class TramitesService {
   ){}
 
   async findAll() {
+    
     return await this.tramitesRepository.find(
       {
           order:{
@@ -30,10 +31,24 @@ export class TramitesService {
   }
 
   async create(data: CreateTramiteDto): Promise<Tramite> {
+    let num_tramite:number = 0;
+
+    const num_tramite_max = await this.tramitesRepository.createQueryBuilder('tramites')
+      .select('MAX(tramites.numero_tramite)','num_max')
+      .getRawOne();
     
+    if(!num_tramite_max) throw new BadRequestException ("No se encontro tramites registrados.")
+    
+    console.log("maximo", num_tramite_max);    
+
+    num_tramite = num_tramite_max.num_max + 1;
+    console.log("nunumero nuevoevo", num_tramite);
+    data.numero_tramite = num_tramite;
     const existe = await this.tramitesRepository.findOne({numero_tramite: data.numero_tramite});
-    if(existe) throw new BadRequestException ("El tramite que intenta crear ya existe.");
+    //if(existe) throw new BadRequestException ("El tramite que intenta crear ya existe.");
     const nuevo = await this.tramitesRepository.create(data);
+    console.log("nuevo", nuevo);
+
     return await this.tramitesRepository.save(nuevo);
 
   }

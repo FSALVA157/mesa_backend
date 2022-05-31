@@ -14,7 +14,7 @@ export class CreateTramiteDto {
     
     @IsString()        
     @MaxLength(50)
-    @MinLength(1)
+    @MinLength(0)
     expediente_nota: string;
     
     @IsString()        
