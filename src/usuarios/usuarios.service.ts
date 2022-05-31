@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
@@ -32,11 +32,26 @@ export class UsuariosService {
  
   }
 
-  update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
-    return `This action updates a #${id} usuario`;
+  async update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
+    try {
+      const respuesta = await this.usuarioRepository.update(id, updateUsuarioDto);
+
+      if (respuesta.affected == 0){ 
+        throw new Error('No se ha Editado Ningún Registro');
+      }     
+    } catch (error) {
+        throw new BadRequestException('Error al Editar', error.message);
+    }    
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} usuario`;
+  async remove(id: number) {
+    try {
+      const respuesta = await this.usuarioRepository.delete({id_usuario: id});
+      if(respuesta.affected == 0){
+        throw new Error('No se ha eliminado ningún Registro');
+      }
+    } catch (error) {
+      throw new BadRequestException('Error al Eliminar el Registro', error.message);
+    }
   }
 }
