@@ -2,8 +2,8 @@ import { IsDateString, isDateString, IsInt, IsNotEmpty, IsString, MaxLength, Min
 
 export class CreateTramiteDto {
 
-    @IsInt()
-    @IsNotEmpty()
+    // @IsInt()
+    // @IsNotEmpty()
     numero_tramite: number;
     
     @IsString()

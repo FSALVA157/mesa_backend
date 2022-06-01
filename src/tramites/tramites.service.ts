@@ -30,29 +30,38 @@ export class TramitesService {
     return respuesta;
   }
 
+  //CREAR TRAMITE
   async create(data: CreateTramiteDto): Promise<Tramite> {
-    let num_tramite:number = 0;
+    let num_tramite_nuevo:number = 0;
 
     const num_tramite_max = await this.tramitesRepository.createQueryBuilder('tramites')
       .select('MAX(tramites.numero_tramite)','num_max')
       .getRawOne();
     
-    if(!num_tramite_max) throw new BadRequestException ("No se encontro tramites registrados.")
-    
-    console.log("maximo", num_tramite_max);    
-
-    num_tramite = num_tramite_max.num_max + 1;
-    console.log("nunumero nuevoevo", num_tramite);
-    data.numero_tramite = num_tramite;
-    const existe = await this.tramitesRepository.findOne({numero_tramite: data.numero_tramite});
-    //if(existe) throw new BadRequestException ("El tramite que intenta crear ya existe.");
+    if(!num_tramite_max) {
+      num_tramite_max.num_max = 0;
+    }
+      
+    num_tramite_nuevo = num_tramite_max.num_max + 1;    
+    data.numero_tramite = num_tramite_nuevo;
+        
     const nuevo = await this.tramitesRepository.create(data);
-    console.log("nuevo", nuevo);
+    try {
+      return await this.tramitesRepository.save(nuevo);
+    } catch (error) {
+      if(error.code=='ER_DUP_ENTRY'){
+        const existe = await this.tramitesRepository.findOne({numero_tramite: data.numero_tramite});
+        if(existe) throw new BadRequestException ("El número de tramite que se intentó crear ya existe. Intente guardar nuevamente");
+      }
 
-    return await this.tramitesRepository.save(nuevo);
+      throw new NotFoundException('Errores: ',error);
+  
+    }    
 
   }
+  //FIN CREAR TRAMITE..................................................................................
 
+  //ACTUALIZAR TRAMITE
   async update(id: number, data: UpdateTramiteDto) {
     const respuesta = await this.tramitesRepository.update(id, data);
     if((await respuesta).affected == 0) throw new NotFoundException("No se modificó el registro de tramite.");
@@ -64,4 +73,5 @@ export class TramitesService {
     if(!respuesta) throw new NotFoundException("No existe el registro de tramite que intenta eliminar");
     return await this.tramitesRepository.remove(respuesta);
   }
+  //FIN ACTUALIZAR TRAMITE..............................................................................
 }
