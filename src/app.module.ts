@@ -9,6 +9,7 @@ import { SectoresModule } from './sectores/sectores.module';
 import { TiposTramiteModule } from './tipos-tramite/tipos-tramite.module';
 import { TramitesModule } from './tramites/tramites.module';
 import { TYPEORM_CONFIG } from './config/constants';
+import { AuthModule } from './auth/auth.module';
 import databaseConfig from './config/database.config';
 
 @Module({
@@ -29,6 +30,7 @@ import databaseConfig from './config/database.config';
   SectoresModule,
   TiposTramiteModule,
   TramitesModule,
+  AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

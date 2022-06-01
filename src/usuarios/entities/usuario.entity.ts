@@ -1,8 +1,19 @@
 import { IsOptional } from "class-validator";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import  *  as  bcrypt  from  'bcrypt';
 
 @Entity()
 export class Usuario {
+
+    @BeforeUpdate()
+    @BeforeInsert()
+    async hashClave(){
+        if(!this.clave){
+            return;
+        }
+    const salt = await bcrypt.genSalt(10);
+    this.clave = await bcrypt.hash(this.clave, salt);
+    }
 
     @PrimaryGeneratedColumn()
     id_usuario: number;
@@ -25,7 +36,8 @@ export class Usuario {
 
     @Column({
         type: "varchar",
-        nullable:false        
+        nullable:false,
+        select: false  
     })
     clave: string;
 
@@ -71,4 +83,13 @@ export class Usuario {
 
     @UpdateDateColumn()
     actualizado: Date;
+
+       
+    
+    
+    
+    
+    
+    
+    
 }

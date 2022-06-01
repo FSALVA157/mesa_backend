@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { Usuario } from './entities/usuario.entity';
+import  *  as  bcrypt  from  'bcrypt';
 
 @Injectable()
 export class UsuariosService {
@@ -34,6 +35,10 @@ export class UsuariosService {
 
   async update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
     try {
+      if(updateUsuarioDto.clave){
+        const salt = await bcrypt.genSalt(10);
+        updateUsuarioDto.clave = await bcrypt.hash(updateUsuarioDto.clave, salt);
+      }
       const respuesta = await this.usuarioRepository.update(id, updateUsuarioDto);
 
       if (respuesta.affected == 0){ 
@@ -51,7 +56,7 @@ export class UsuariosService {
         throw new Error('No se ha eliminado ningún Registro');
       }
     } catch (error) {
-      throw new BadRequestException('Error al Eliminar el Registro', error.message);
+      throw new BadRequestException('Error en Petición de Delete', error.message);
     }
   }
 }
