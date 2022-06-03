@@ -59,4 +59,19 @@ export class UsuariosService {
       throw new BadRequestException('Error en Petición de Delete', error.message);
     }
   }
+
+  async findOneByUser(user: string){
+    try {
+      return await this.usuarioRepository
+                                        .createQueryBuilder('usuario')
+                                        .where({usuario: user})
+                                        .addSelect('usuario.clave')
+                                        .getOne(); 
+      } catch (error) {
+      throw new BadRequestException('Error en UsuarioService', error.message)
+    }
+  }
+
+
+
 }
