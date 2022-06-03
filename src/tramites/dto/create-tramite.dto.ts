@@ -31,8 +31,8 @@ export class CreateTramiteDto {
     @IsDateString()
     fecha: Date;
 
-    @IsInt()
-    @IsNotEmpty()
+    // @IsInt()
+    // @IsNotEmpty()
     anio: number;
 
     @IsInt()

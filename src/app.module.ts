@@ -8,6 +8,7 @@ import { OrganismosModule } from './organismos/organismos.module';
 import { SectoresModule } from './sectores/sectores.module';
 import { TiposTramiteModule } from './tipos-tramite/tipos-tramite.module';
 import { TramitesModule } from './tramites/tramites.module';
+import { MovimientosTramiteModule } from './movimientos-tramite/movimientos-tramite.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { TramitesModule } from './tramites/tramites.module';
   SectoresModule,
   TiposTramiteModule,
   TramitesModule,
+  MovimientosTramiteModule,
   ],
   controllers: [AppController],
   providers: [AppService],

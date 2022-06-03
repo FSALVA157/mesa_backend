@@ -33,6 +33,10 @@ export class TramitesService {
   //CREAR TRAMITE
   async create(data: CreateTramiteDto): Promise<Tramite> {
     let num_tramite_nuevo:number = 0;
+    
+    //obtener año actual
+    let fecha_hoy: Date = new Date();    
+    let anio:number= fecha_hoy.getFullYear(); 
 
     const num_tramite_max = await this.tramitesRepository.createQueryBuilder('tramites')
       .select('MAX(tramites.numero_tramite)','num_max')
@@ -44,7 +48,8 @@ export class TramitesService {
       
     num_tramite_nuevo = num_tramite_max.num_max + 1;    
     data.numero_tramite = num_tramite_nuevo;
-        
+    data.anio = anio;    
+
     const nuevo = await this.tramitesRepository.create(data);
     try {
       return await this.tramitesRepository.save(nuevo);
@@ -53,8 +58,8 @@ export class TramitesService {
         const existe = await this.tramitesRepository.findOne({numero_tramite: data.numero_tramite});
         if(existe) throw new BadRequestException ("El número de tramite que se intentó crear ya existe. Intente guardar nuevamente");
       }
-
-      throw new NotFoundException('Errores: ',error);
+      
+      throw new NotFoundException('Error al crear el nuevo tramite: ',error.message);
   
     }    
 
