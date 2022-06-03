@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigService, ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsuariosModule } from './usuarios/usuarios.module';
@@ -9,30 +9,21 @@ import { SectoresModule } from './sectores/sectores.module';
 import { TiposTramiteModule } from './tipos-tramite/tipos-tramite.module';
 import { TramitesModule } from './tramites/tramites.module';
 import { MovimientosTramiteModule } from './movimientos-tramite/movimientos-tramite.module';
+import { TYPEORM_CONFIG } from './config/constants';
+import { AuthModule } from './auth/auth.module';
+import databaseConfig from './config/database.config';
 
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        type: 'mysql',
-        //host: config.get<string>(DATABASE_HOST),
-        host: "bix9xc7auhahumrogdey-mysql.services.clever-cloud.com",
-        //port: parseInt(config.get<string>(DATABASE_PORT),10),
-        port: 3306,
-        //username: config.get<string>(DATABASE_USERNAME),
-        username:"uxdbj17rjebal3qa",
-        //password: config.get<string>(DATABASE_PASSWORD),
-        password:"ymauNZUwI7Cq5gkKrIMQ",
-        //database: config.get<string>(DATABASE_NAME),
-        database: "bix9xc7auhahumrogdey",
-        entities: [__dirname + "./**/**/*.entity{.ts,.js}"],
-        autoLoadEntities: true,
-        synchronize: true
-    })
+      useFactory: (config: ConfigService) => config.get<TypeOrmModuleOptions>(TYPEORM_CONFIG)
+       
+                                                            
   }),
   ConfigModule.forRoot({
     isGlobal: true,
+    load: [databaseConfig],
     envFilePath: '.env'
   }),
   UsuariosModule,
@@ -41,6 +32,7 @@ import { MovimientosTramiteModule } from './movimientos-tramite/movimientos-tram
   TiposTramiteModule,
   TramitesModule,
   MovimientosTramiteModule,
+  AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
