@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/
 import { MovimientosTramiteService } from './movimientos-tramite.service';
 import { CreateMovimientoTramiteDto } from './dto/create-movimiento-tramite.dto';
 import { UpdateMovimientoTramiteDto } from './dto/update-movimiento-tramite.dto';
+import { MovimientoTramite } from './entities/movimiento-tramite.entity';
 
 @Controller('movimientos-tramite')
 export class MovimientosTramiteController {
@@ -25,6 +26,15 @@ export class MovimientosTramiteController {
   @Put(':id')
   update(@Param('id') id: string, @Body() updateMovimientosTramiteDto: UpdateMovimientoTramiteDto) {
     return this.movimientosTramiteService.update(+id, updateMovimientosTramiteDto);
+  }
+
+  @Put('/tramite-salida/:num_movimiento')
+  async movimiento_salida(
+    @Param('num_movimiento') 
+    num_movimiento: string, 
+    @Body() 
+    data: UpdateMovimientoTramiteDto) {
+    return this.movimientosTramiteService.tramite_salida(+num_movimiento, data);
   }
 
   @Delete(':id')

@@ -3,11 +3,13 @@ import { MovimientosTramiteService } from './movimientos-tramite.service';
 import { MovimientosTramiteController } from './movimientos-tramite.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MovimientoTramite } from './entities/movimiento-tramite.entity';
+import { Tramite } from 'src/tramites/entities/tramite.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      MovimientoTramite
+      MovimientoTramite,
+      Tramite
     ])
   ],
   controllers: [MovimientosTramiteController],

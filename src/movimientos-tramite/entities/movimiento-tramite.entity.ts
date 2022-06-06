@@ -111,6 +111,13 @@ export class MovimientoTramite {
         default: false,
         nullable: false
     })
+    enviado: boolean;
+
+    @Column({
+        type: 'bool',
+        default: false,
+        nullable: false
+    })
     impreso: boolean;
 
 
