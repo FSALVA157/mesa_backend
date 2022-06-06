@@ -1,16 +1,20 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { compare } from 'bcrypt';
+import { Usuario } from 'src/usuarios/entities/usuario.entity';
 import { UsuariosService } from "src/usuarios/usuarios.service";
 
 @Injectable()
 export class AuthService {
     constructor(
-        private readonly userService: UsuariosService
+        private readonly userService: UsuariosService,
+        private readonly jwtService: JwtService
     ){}
 
     async validate(usuario: string, password: string){
         try {
           const usuarioData = await  this.userService.findOneByUser(usuario);
-          if(usuarioData && usuarioData.clave === password){
+          if(usuarioData && await compare(password,usuarioData.clave)){
                 const {clave, ...resultado} = usuarioData;
                 return resultado;
           }else{
@@ -21,5 +25,14 @@ export class AuthService {
             throw new BadRequestException('Error en petición de login', error.message);
         }
         
+    }
+    async login(usuario: any){
+        const payload = {
+            username: usuario.nombre,
+            sub: usuario.id_usuario
+        };
+        return {
+            access_token: this.jwtService.sign(payload)
+        };
     }
 }

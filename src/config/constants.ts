@@ -4,6 +4,10 @@ export const SERVER_PORT = 'PORT';
  */
 export const TYPEORM_CONFIG = 'database.config';
 
+export const JWT_CONSTANTS = {
+    secret: 'JWT_SECRET'
+};
+
 export const CLOUDINARY_CLOUD_NAME = 'CLOUDINARY_CLOUD_NAME';
 export const CLOUDINARY_API_KEY = 'CLOUDINARY_API_KEY';
 export const CLOUDINARY_API_SECRET = 'CLOUDINARY_API_SECRET';

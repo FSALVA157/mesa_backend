@@ -15,8 +15,9 @@ export class AuthController {
         @Req()
         req: any
     ){
-        //return this.authService.validateUser(req.query.user.toString(), req.query.pass.toString());
-        return req.user;
+        //return req.user;
+        return this.authService.login(req.user);
+
 
     }
 
