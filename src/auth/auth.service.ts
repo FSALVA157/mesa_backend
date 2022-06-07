@@ -1,7 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { compare } from 'bcrypt';
-import { Usuario } from 'src/usuarios/entities/usuario.entity';
 import { UsuariosService } from "src/usuarios/usuarios.service";
 
 @Injectable()

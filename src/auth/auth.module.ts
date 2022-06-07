@@ -6,6 +6,7 @@ import { UsuariosModule } from 'src/usuarios/usuarios.module';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { JWT_CONSTANTS } from 'src/config/constants';
+import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
   imports: [
@@ -14,13 +15,14 @@ import { JWT_CONSTANTS } from 'src/config/constants';
     JwtModule.register({
       secret: JWT_CONSTANTS.secret,
       signOptions: {
-        expiresIn: '60s'
+        expiresIn: '60m'
       }
     }),
   ],
   providers: [
     AuthService,
-    LocalStrategy
+    LocalStrategy,
+    JwtStrategy
   ],
   controllers: [AuthController]
 })
