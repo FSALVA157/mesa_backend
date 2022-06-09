@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { MovimientoTramite } from './entities/movimiento-tramite.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Tramite } from 'src/tramites/entities/tramite.entity';
+import { Sector } from 'src/sectores/entities/sector.entity';
 
 @Injectable()
 export class MovimientosTramiteService {
@@ -13,6 +14,8 @@ export class MovimientosTramiteService {
     private readonly movimientosTramiteRepository: Repository<MovimientoTramite>,
     @InjectRepository(Tramite)
     private readonly tramitesRepository: Repository<Tramite>,
+    @InjectRepository(Sector)
+    private readonly sectorRepository: Repository<Sector>,
 
     
   ){}
@@ -40,7 +43,7 @@ export class MovimientosTramiteService {
   //FIN BUSCAR MOVIMIENTO DEL TRAMITE XID..................................................................
 
   //CREAR MOVIMIENTO DEL TRAMITE
-  async create(data: CreateMovimientoTramiteDto): Promise<MovimientoTramite> {
+  async create(data: Partial<CreateMovimientoTramiteDto>): Promise<MovimientoTramite> {
     let num_nuevo:number = 0;         
     
     //Control de existencia del tramite
@@ -84,18 +87,32 @@ export class MovimientosTramiteService {
 
   //SALIDA MOVIMIENTO DEL TRAMITE
   async tramite_salida(num_movimiento: number, data: UpdateMovimientoTramiteDto) {
-    data.sector_destino_id = 3;
+    //data.sector_destino_id = 3;
     data.fecha_salida= new Date();
     data.enviado = true;
-    console.log("numero mov", num_movimiento);
+    
+    //controlar destino
+    const sector_destino = await this.sectorRepository.findOne(data.sector_destino_id);
+    const sector_actual = await this.sectorRepository.findOne(data.sector_id);    
+    
+    if(sector_actual.organismo_id != sector_destino.organismo_id){
+      if(sector_actual.es_mesa_entrada){
+        if(!sector_destino.es_mesa_entrada){
+          throw new NotFoundException("El sector destino debe ser mesa de entrada del Organismo destino");
+        }
+        
+      }else{
+        throw new NotFoundException("El sector destino debe ser del mismo Organismo de su sector.");
+      }
+    }
+
     try{
       const respuesta = await this.movimientosTramiteRepository.update({num_movimiento_tramite: num_movimiento}, data);
-      if((await respuesta).affected == 0) throw new NotFoundException("No se efectuó la salida del tramite.");
+      if((await respuesta).affected == 0) throw new NotFoundException("No se efectuó la salida del tramite. Intente nuevamente.");
       return respuesta;
     }catch(error){
       throw new NotFoundException('Error al dar salida al tramite: ',error.message);
-    }
-    
+    }    
   }
   //FIN SALIDA MOVIMIENTO DEL TRAMITE..............................................................................
   

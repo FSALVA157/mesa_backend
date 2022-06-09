@@ -1,4 +1,4 @@
-import { IsDateString, IsInt, IsNotEmpty, IsString, MaxLength, MinLength, IsBoolean } from 'class-validator';
+import { IsDateString, IsInt, IsNotEmpty, IsString, MaxLength, MinLength, IsBoolean, IsEmpty } from 'class-validator';
 
 export class CreateMovimientoTramiteDto {
     
@@ -30,6 +30,7 @@ export class CreateMovimientoTramiteDto {
     @IsNotEmpty()
     sector_destino_id: number;
     
+    @IsNotEmpty()
     @IsDateString()
     fecha_salida: Date;
     
