@@ -11,6 +11,9 @@ export class CreateSectorDto {
     @IsBoolean()
     es_mesa_entrada: boolean;
    
+    @IsBoolean()
+    tiene_sistema: boolean;
+
     @IsInt()
     @IsNotEmpty()
     organismo_id: string;

@@ -49,8 +49,6 @@ export class TramitesService {
 
     //cargar datos por defecto
     data.numero_tramite = num_tramite_nuevo;
-    data.anio = anio;    
-    data.fecha = new Date('2022-06-08');
     
     //guardar tramite
     const nuevo = await this.tramitesRepository.create(data);

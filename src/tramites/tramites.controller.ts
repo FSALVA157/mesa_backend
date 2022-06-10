@@ -8,8 +8,16 @@ export class TramitesController {
   constructor(private readonly tramitesService: TramitesService) {}
 
   @Post()
-  create(@Body() createTramiteDto: CreateTramiteDto) {
-    return this.tramitesService.create(createTramiteDto);
+  create(@Body() data: CreateTramiteDto) {
+    //obtener año actual   
+    let anio:number= new Date().getFullYear();
+
+    
+    //cargar datos por defecto
+    data.anio = anio;    
+    data.fecha = new Date();
+
+    return this.tramitesService.create(data);
   }
 
   @Get()

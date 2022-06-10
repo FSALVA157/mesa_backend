@@ -61,12 +61,9 @@ export class MovimientosTramiteService {
     }      
     num_nuevo = num_max.numero_max + 1;    
 
-    //cargar datos por defecto
+    //cargar numero de movimiento den data
     data.num_movimiento_tramite = num_nuevo; 
-    data.sector_destino_id= 1;
-    data.fecha_ingreso = new Date();    
-    data.enviado= false;
-
+    
     //guardar movimiento
     const nuevo = await this.movimientosTramiteRepository.create(data);
     try {
@@ -87,24 +84,7 @@ export class MovimientosTramiteService {
 
   //SALIDA MOVIMIENTO DEL TRAMITE
   async tramite_salida(num_movimiento: number, data: UpdateMovimientoTramiteDto) {
-    //data.sector_destino_id = 3;
-    data.fecha_salida= new Date();
-    data.enviado = true;
     
-    //controlar destino
-    const sector_destino = await this.sectorRepository.findOne(data.sector_destino_id);
-    const sector_actual = await this.sectorRepository.findOne(data.sector_id);    
-    
-    if(sector_actual.organismo_id != sector_destino.organismo_id){
-      if(sector_actual.es_mesa_entrada){
-        if(!sector_destino.es_mesa_entrada){
-          throw new NotFoundException("El sector destino debe ser mesa de entrada del Organismo destino");
-        }
-        
-      }else{
-        throw new NotFoundException("El sector destino debe ser del mismo Organismo de su sector.");
-      }
-    }
 
     try{
       const respuesta = await this.movimientosTramiteRepository.update({num_movimiento_tramite: num_movimiento}, data);

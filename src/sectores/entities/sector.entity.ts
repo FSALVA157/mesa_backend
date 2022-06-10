@@ -20,7 +20,11 @@ export class Sector {
     })
     es_mesa_entrada: boolean;
 
-
+    @Column({
+        type: "boolean",
+        nullable: false
+    })
+    tiene_sistema: boolean;
 
     //ORGANISMO
     @Column({
