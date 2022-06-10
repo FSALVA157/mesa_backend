@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Req, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, Request, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
@@ -26,9 +26,25 @@ export class AuthController {
     @Get('profile')
     getProfile(
         @Request()
-        req
+        req:any
     ){
         return req.user;
+    }
+
+
+    //TODO: INVALIDAR TOKEN ANTERIOR
+    @UseGuards(JwtAuthGuard)
+    @Get('refresh')
+    async refreshToken(
+        @Body()
+        user: any
+    ){
+        const data = await this.authService.login(user);
+        return {
+            message: "Token Refresh exitoso",
+            data            
+        }
+
     }
 
 }
