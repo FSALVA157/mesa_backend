@@ -42,6 +42,14 @@ export class MovimientosTramiteService {
   }
   //FIN BUSCAR MOVIMIENTO DEL TRAMITE XID..................................................................
 
+   //BUSCAR MOVIMIENTO DEL TRAMITE XID
+   async findOneXNumMov(num_mov: number) {
+    const respuesta = await this.movimientosTramiteRepository.findOne({num_movimiento_tramite: num_mov});
+    if (!respuesta) throw new NotFoundException("No se encontró el registro de movimiento de tramite solicitado.");
+    return respuesta;
+  }
+  //FIN BUSCAR MOVIMIENTO DEL TRAMITE XID..................................................................
+
   //CREAR MOVIMIENTO DEL TRAMITE
   async create(data: Partial<CreateMovimientoTramiteDto>): Promise<MovimientoTramite> {
     let num_nuevo:number = 0;         
@@ -72,13 +80,10 @@ export class MovimientosTramiteService {
       if(error.code=='ER_DUP_ENTRY'){
         const existe = await this.movimientosTramiteRepository.findOne({num_movimiento_tramite: data.num_movimiento_tramite});
         if(existe) throw new BadRequestException ("El número de movimiento de tramite que se intentó crear ya existe. Intente guardar nuevamente");
-      }
-      
-      throw new NotFoundException('Error al crear el nuevo movimiento de tramite: ',error.message);
-  
+      }      
+      throw new NotFoundException('Error al crear el nuevo movimiento de tramite: ',error.message);  
     }   
     //FIN guardar movimiento 
-
   }
   //FIN CREAR MOVIMIENTO DEL TRAMITE..................................................................................
 
