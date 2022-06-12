@@ -50,6 +50,20 @@ export class MovimientosTramiteService {
   }
   //FIN BUSCAR MOVIMIENTO DEL TRAMITE XID..................................................................
 
+  //BUSCAR MOVIMIENTO DEL TRAMITE XID
+  async findUltimoXNumTramite(num_tramite: number) {
+    const respuesta = await this.movimientosTramiteRepository.findOne(
+      {where: {
+          tramite_numero: num_tramite,
+          recibido: false
+        }
+      }
+    );
+    if (!respuesta) throw new NotFoundException("No se encontró el registro de movimiento de tramite solicitado.");
+    return respuesta;
+  }
+  //FIN BUSCAR MOVIMIENTO DEL TRAMITE XID..................................................................
+
   //CREAR MOVIMIENTO DEL TRAMITE
   async create(data: Partial<CreateMovimientoTramiteDto>): Promise<MovimientoTramite> {
     let num_nuevo:number = 0;         

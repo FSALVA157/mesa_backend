@@ -33,32 +33,49 @@ export class MovimientosTramiteController {
   @Post('recibir-tramite')
   async recibir_tramite (
     @Body() 
-    data: CreateMovimientoTramiteDto,
-    @Req()
-    req: Request
-  ): Promise<MovimientoTramite> {
-    console.log("numero movimiento tramte", req.query.num_movimiento);
-    console.log("tramite", data);
-
-    //obtener numero de movimiento anterior
-    let num_mov_anterior: number = 0;    
-    num_mov_anterior= parseInt(req.query.num_movimiento.toString());  
-    if(isNaN(num_mov_anterior) ){
-      throw new NotFoundException('El numero de movimiento de tramite no es valido.');
-    }    
-    console.log("supuesto erro conversion", num_mov_anterior);
-
-    //buscar movimiento
+    data: CreateMovimientoTramiteDto
+  ): Promise<MovimientoTramite> {    
+   
+    //buscar movimiento anterior
     let movimiento_anterior: MovimientoTramite;
     try{
-      movimiento_anterior= await this.movimientosTramiteService.findOneXNumMov(num_mov_anterior);
-      console.log("respuesta recibr tramite", movimiento_anterior);
+      movimiento_anterior= await this.movimientosTramiteService.findUltimoXNumTramite(data.tramite_numero);
+      //controles en el ultimo movimiento del tramite
+      if(!movimiento_anterior.enviado){
+        throw new NotFoundException ("El tramite no fue enviado por el ultimo sector que lo recibió");
+      }
+
       if(movimiento_anterior.sector_destino_id != data.sector_id){
         throw new NotFoundException ("Sólo el sector destino puede recibir el tramite");
       }
     }catch (error){
       throw new NotFoundException('Error buscando: ',error.message);
     }
+    
+    //guardar/recibir tramite
+    let movimiento_nuevo: MovimientoTramite;
+    //cargar datos por defecto
+    data.sector_destino_id= 1;
+    data.fecha_ingreso = new Date();    
+    data.enviado= false;
+    data.recibido= false;
+    try{
+      movimiento_nuevo= await this.movimientosTramiteService.create(data);
+      console.log("respuesta recibr tramite", movimiento_nuevo);
+
+      //marcar como recibido el movimiento anterior
+      movimiento_anterior.recibido=true;
+      try{
+        this.movimientosTramiteService.update(movimiento_anterior.id_movimiento_tramite, movimiento_anterior);
+      }catch(error){
+        throw new NotFoundException('Error al cambiar estado recibido del tramite: ',error.message);
+      }
+      
+    }catch (error){
+      throw new NotFoundException('Error al recibir el tramite: ',error.message);
+    }
+
+
 
     
     //cargar datos por defecto

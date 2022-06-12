@@ -47,6 +47,9 @@ export class CreateMovimientoTramiteDto {
     @IsBoolean()
     enviado: boolean;
 
+    @IsBoolean()
+    recibido: boolean;
+
     impreso: boolean;
     
     @IsInt()
