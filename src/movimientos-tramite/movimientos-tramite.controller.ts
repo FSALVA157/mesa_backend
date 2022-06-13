@@ -17,6 +17,19 @@ export class MovimientosTramiteController {
     private readonly sectorRepository: Repository<Sector>,
     ) {}
 
+  
+  @Get()
+  findAll() {
+    return this.movimientosTramiteService.findAll();
+  }
+
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    
+    
+    return this.movimientosTramiteService.findOne(+id);
+  }
+
   @Post()
   create(
     @Body() 
@@ -42,7 +55,7 @@ export class MovimientosTramiteController {
       movimiento_anterior= await this.movimientosTramiteService.findUltimoXNumTramite(data.tramite_numero);
       //controles en el ultimo movimiento del tramite
       if(!movimiento_anterior.enviado){
-        throw new NotFoundException ("El tramite no fue enviado por el ultimo sector que lo recibió");
+        throw new NotFoundException ("El tramite no fue enviado por el último sector que lo recibió");
       }
 
       if(movimiento_anterior.sector_destino_id != data.sector_id){
@@ -63,7 +76,7 @@ export class MovimientosTramiteController {
       movimiento_nuevo= await this.movimientosTramiteService.create(data);
       console.log("respuesta recibr tramite", movimiento_nuevo);
 
-      //marcar como recibido el movimiento anterior
+      //actualizar como recibido el movimiento anterior
       movimiento_anterior.recibido=true;
       try{
         this.movimientosTramiteService.update(movimiento_anterior.id_movimiento_tramite, movimiento_anterior);
@@ -75,29 +88,10 @@ export class MovimientosTramiteController {
       throw new NotFoundException('Error al recibir el tramite: ',error.message);
     }
 
-
-
-    
-    //cargar datos por defecto
-    // data.sector_destino_id= 1;
-    // data.fecha_ingreso = new Date();    
-    // data.enviado= false;
-
     // return this.movimientosTramiteService.create(data);
-    return movimiento_anterior;
+    return movimiento_nuevo;
   }
 
-  @Get()
-  findAll() {
-    return this.movimientosTramiteService.findAll();
-  }
-
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    
-    
-    return this.movimientosTramiteService.findOne(+id);
-  }
 
 
   @Put(':id')
