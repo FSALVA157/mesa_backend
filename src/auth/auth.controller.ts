@@ -1,7 +1,7 @@
-import { Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, Request, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { Request } from 'express';
 import { AuthService } from './auth.service';
+import { JwtAuthGuard } from './jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -15,18 +15,36 @@ export class AuthController {
         @Req()
         req: any
     ){
-        //return this.authService.validateUser(req.query.user.toString(), req.query.pass.toString());
-        return req.user;
+        //return req.user;
+        return this.authService.login(req.user);
+
 
     }
 
      
-
+    @UseGuards(JwtAuthGuard)
     @Get('profile')
-    profile(){
+    getProfile(
+        @Request()
+        req:any
+    ){
+        return req.user;
+    }
+
+
+    //TODO: INVALIDAR TOKEN ANTERIOR
+    @UseGuards(JwtAuthGuard)
+    @Get('refresh')
+    async refreshToken(
+        @Body()
+        user: any
+    ){
+        const data = await this.authService.login(user);
         return {
-            message: "DATOS DE PROFILE"
-        };
+            message: "Token Refresh exitoso",
+            data            
+        }
+
     }
 
 }

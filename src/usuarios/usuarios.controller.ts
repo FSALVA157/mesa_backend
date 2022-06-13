@@ -1,24 +1,27 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards, BadRequestException } from '@nestjs/common';
 import { UsuariosService } from './usuarios.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { Request } from 'express';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('usuarios')
 export class UsuariosController {
   constructor(private readonly usuariosService: UsuariosService) {}
 
+  @UseGuards(JwtAuthGuard)  
   @Post()
   create(@Body() createUsuarioDto: CreateUsuarioDto) {
     return this.usuariosService.create(createUsuarioDto);
   }
 
-  
+  @UseGuards(JwtAuthGuard)  
   @Get()
   findAll() {
     return this.usuariosService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   findOne(
     @Param('id')
@@ -34,7 +37,7 @@ export class UsuariosController {
   }
 
     
-
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   update(
     @Param('id')
@@ -42,9 +45,11 @@ export class UsuariosController {
     @Body()
         updateUsuarioDto: UpdateUsuarioDto
      ) {
-            return this.usuariosService.update(+id, updateUsuarioDto);
-         }
+       return this.usuariosService.update(+id, updateUsuarioDto);         
+       }
 
+  
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usuariosService.remove(+id);

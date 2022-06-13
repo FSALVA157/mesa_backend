@@ -15,12 +15,23 @@ export class UsuariosService {
   ){}
 
   async create(createUsuarioDto: CreateUsuarioDto): Promise<Usuario> {
-    const nuevo =  await this.usuarioRepository.create(createUsuarioDto);
-    return await this.usuarioRepository.save(nuevo);
+    try {
+      const nuevo = this.usuarioRepository.create(createUsuarioDto);
+      return await this.usuarioRepository.save(nuevo);  
+    } catch (error) {
+      throw new BadRequestException('Error al Crear Usuario Nuevo', error.message);
+    }
+    
+    
   }
 
   async findAll(): Promise<[Usuario[], number]> {
-    return await this.usuarioRepository.findAndCount();
+    try {
+      return await this.usuarioRepository.findAndCount();
+      
+    } catch (error) {
+      throw new BadRequestException('Error al Listar Usuarios', error.message);
+    }
   }
 
  async findOne(id: number) {
@@ -39,11 +50,16 @@ export class UsuariosService {
         const salt = await bcrypt.genSalt(10);
         updateUsuarioDto.clave = await bcrypt.hash(updateUsuarioDto.clave, salt);
       }
+            
       const respuesta = await this.usuarioRepository.update(id, updateUsuarioDto);
-
       if (respuesta.affected == 0){ 
         throw new Error('No se ha Editado Ningún Registro');
-      }     
+      }else{
+        return {
+          message: "Edición de Datos Exitosa"
+        };
+      }
+      
     } catch (error) {
         throw new BadRequestException('Error al Editar', error.message);
     }    
@@ -54,6 +70,10 @@ export class UsuariosService {
       const respuesta = await this.usuarioRepository.delete({id_usuario: id});
       if(respuesta.affected == 0){
         throw new Error('No se ha eliminado ningún Registro');
+      }else{
+        return {
+          message: "Usuario Eliminado Exitosamente"
+        };
       }
     } catch (error) {
       throw new BadRequestException('Error en Petición de Delete', error.message);
@@ -68,7 +88,7 @@ export class UsuariosService {
                                         .addSelect('usuario.clave')
                                         .getOne(); 
       } catch (error) {
-      throw new BadRequestException('Error en UsuarioService', error.message)
+      throw new NotFoundException('No existe el Usuario solicitado', error.message);
     }
   }
 
