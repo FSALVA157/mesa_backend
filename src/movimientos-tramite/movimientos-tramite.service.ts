@@ -33,24 +33,15 @@ export class MovimientosTramiteService {
   }
   //FIN BUSCAR TODOS LOS MOVIMIENTO DEL TRAMITE...........................................................
 
-  //BUSCAR MOVIMIENTO DEL TRAMITE XID
-  async findOne(id: number) {
-    //const respuesta = await this.movimientosTramiteRepository.findOneOrFail(id);
-    const respuesta = await this.movimientosTramiteRepository.findOne(id);
-    if (!respuesta) throw new NotFoundException("No se encontró el registro de movimiento de tramite solicitado.");
-    return respuesta;
-  }
-  //FIN BUSCAR MOVIMIENTO DEL TRAMITE XID..................................................................
-
-   //BUSCAR MOVIMIENTO DEL TRAMITE XID
+   //BUSCAR MOVIMIENTO DEL TRAMITE XNUM_MOVIMIENTO
    async findOneXNumMov(num_mov: number) {
     const respuesta = await this.movimientosTramiteRepository.findOne({num_movimiento_tramite: num_mov});
     if (!respuesta) throw new NotFoundException("No se encontró el registro de movimiento de tramite solicitado.");
     return respuesta;
   }
-  //FIN BUSCAR MOVIMIENTO DEL TRAMITE XID..................................................................
+  //FIN BUSCAR MOVIMIENTO DEL TRAMITE XNUM_MOVIMIENTO..................................................................
 
-  //BUSCAR MOVIMIENTO DEL TRAMITE XID
+  //BUSCAR ULTIMO MOVIMIENTO DEL TRAMITE XNUM_TRAMITE
   async findUltimoXNumTramite(num_tramite: number) {
     const respuesta = await this.movimientosTramiteRepository.findOne(
       {where: {
@@ -59,6 +50,44 @@ export class MovimientosTramiteService {
         }
       }
     );
+    if (!respuesta) throw new NotFoundException("No se encontró el registro de movimiento de tramite solicitado.");
+    return respuesta;
+  }
+  //FIN BUSCAR ULTIMO MOVIMIENTO DEL TRAMITE XNUM_TRAMITE..................................................................
+
+  //BUSCAR HISTORIAL DEL TRAMITE XNUM_TRAMITE
+  async findHistorial(num_tramite: number) {
+    const respuesta = await this.movimientosTramiteRepository.findAndCount(
+      {where: {
+          tramite_numero: num_tramite
+        }
+      }
+    );
+    if (!respuesta) throw new NotFoundException("No se encontró el registro de movimiento de tramite solicitado.");
+    return respuesta;
+  }
+  //FIN BUSCAR HISTORIAL DEL TRAMITE XNUM_TRAMITE..................................................................
+
+  //BUSCAR HISTORIAL DEL TRAMITE XNUM_TRAMITE
+  async findHistorialXSector(num_tramite: number, id_sector:number) {
+    const respuesta = await this.movimientosTramiteRepository.findAndCount(
+      {where: {
+          tramite_numero: num_tramite,
+          sector_destino_id: id_sector
+        }
+      }
+    );
+    console.log("array 1", respuesta[1]);
+    if (!respuesta) throw new NotFoundException("No se encontró el registro de movimiento de tramite solicitado.");
+    return respuesta;
+  }
+  //FIN BUSCAR HISTORIAL DEL TRAMITE XNUM_TRAMITE..................................................................
+
+  
+  //BUSCAR MOVIMIENTO DEL TRAMITE XID
+  async findOne(id: number) {
+    //const respuesta = await this.movimientosTramiteRepository.findOneOrFail(id);
+    const respuesta = await this.movimientosTramiteRepository.findOne(id);
     if (!respuesta) throw new NotFoundException("No se encontró el registro de movimiento de tramite solicitado.");
     return respuesta;
   }
@@ -102,8 +131,7 @@ export class MovimientosTramiteService {
   //FIN CREAR MOVIMIENTO DEL TRAMITE..................................................................................
 
   //SALIDA MOVIMIENTO DEL TRAMITE
-  async tramite_salida(num_movimiento: number, data: UpdateMovimientoTramiteDto) {
-    
+  async tramite_salida(num_movimiento: number, data: UpdateMovimientoTramiteDto) {    
 
     try{
       const respuesta = await this.movimientosTramiteRepository.update({num_movimiento_tramite: num_movimiento}, data);

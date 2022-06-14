@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, UseGuards } from '@nestjs/common';
 import { TramitesService } from './tramites.service';
 import { CreateTramiteDto } from './dto/create-tramite.dto';
 import { UpdateTramiteDto } from './dto/update-tramite.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('tramites')
 export class TramitesController {
@@ -20,6 +21,7 @@ export class TramitesController {
     return this.tramitesService.create(data);
   }
 
+  // @UseGuards(JwtAuthGuard)
   @Get()
   findAll() {
     return this.tramitesService.findAll();

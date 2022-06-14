@@ -17,19 +17,56 @@ export class MovimientosTramiteController {
     private readonly sectorRepository: Repository<Sector>,
     ) {}
 
+
   
+  //BUSCAR TODOS LOS MOVIMIENTO DEL TRAMITE
   @Get()
   findAll() {
     return this.movimientosTramiteService.findAll();
   }
+  //FIN BUSCAR TODOS LOS MOVIMIENTO DEL TRAMITE............................................
 
+  
+  //BUSCAR HISTORIAL MOVIMIENTO DEL TRAMITE Xnum tramite
+  @Get('/historial-tramite/:num_tramite')
+  async findHistorialTramite(
+    @Param('num_tramite') 
+    num_tramite: string
+  ) {
+    let numero_tramite: number = parseInt(num_tramite.toString());
+    if(isNaN(numero_tramite)) throw new NotFoundException("El número de tramite no es un entero");
+    return this.movimientosTramiteService.findHistorial(numero_tramite);
+  }
+  //BUSCAR HISTORIAL MOVIMIENTO DEL TRAMITE XID......................................................
+
+  //BUSCAR HISTORIAL MOVIMIENTO DEL TRAMITE Xsector
+  @Get('historial-por-sector')
+  async findHistorialSector(
+    // @Param('num_tramite') 
+    // num_tramite: string,
+    @Req()
+    req: Request
+  ) {
+    let num_tramite: number = parseInt(req.query.num_tramite.toString());
+    console.log("tramite num", num_tramite);
+    if(isNaN(num_tramite)) throw new NotFoundException("El número de tramite no es un entero");
+    let sector: number = parseInt(req.query.id_sector.toString());
+    if(isNaN(sector)) throw new NotFoundException("El id de sector no es un entero");
+    return this.movimientosTramiteService.findHistorialXSector(num_tramite, sector);
+  }
+  //BUSCAR HISTORIAL MOVIMIENTO DEL TRAMITE XID......................................................
+
+  //BUSCAR MOVIMIENTO DEL TRAMITE XID
   @Get(':id')
   async findOne(@Param('id') id: string) {
     
     
     return this.movimientosTramiteService.findOne(+id);
   }
+  //BUSCAR MOVIMIENTO DEL TRAMITE XID......................................................
 
+
+  //CREAR MOVIMIENTO DEL TRAMITE
   @Post()
   create(
     @Body() 
@@ -42,7 +79,9 @@ export class MovimientosTramiteController {
 
     return this.movimientosTramiteService.create(data);
   }
-
+  //FIN CREAR MOVIMIENTO DEL TRAMITE........................................................
+  
+  //RECIBIR MOVIMIENTO DEL TRAMITE
   @Post('recibir-tramite')
   async recibir_tramite (
     @Body() 
@@ -91,9 +130,8 @@ export class MovimientosTramiteController {
     // return this.movimientosTramiteService.create(data);
     return movimiento_nuevo;
   }
-
-
-
+  //FIN RECIBIR MOVIMIENTO DEL TRAMITE.......................................................
+  
   @Put(':id')
   update(
     @Param('id') id: string, 
@@ -101,7 +139,9 @@ export class MovimientosTramiteController {
     ) {
     return this.movimientosTramiteService.update(+id, updateMovimientosTramiteDto);
   }
+  
 
+  //SALIDA MOVIMIENTO DEL TRAMITE
   @Put('/tramite-salida/:num_movimiento')
   async movimiento_salida(
     @Param('num_movimiento') 
@@ -130,6 +170,7 @@ export class MovimientosTramiteController {
     }
     return this.movimientosTramiteService.tramite_salida(+num_movimiento, data);
   }
+  //FIN SALIDA MOVIMIENTO DEL TRAMITE........................................................
 
   @Delete(':id')
   remove(@Param('id') id: string) {
