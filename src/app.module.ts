@@ -12,6 +12,8 @@ import { MovimientosTramiteModule } from './movimientos-tramite/movimientos-tram
 import { TYPEORM_CONFIG } from './config/constants';
 import { AuthModule } from './auth/auth.module';
 import databaseConfig from './config/database.config';
+import { AccessControlModule } from 'nest-access-control';
+import { roles } from './auth/roles/app.roles';
 
 @Module({
   imports: [
@@ -26,6 +28,7 @@ import databaseConfig from './config/database.config';
     load: [databaseConfig],
     envFilePath: '.env'
   }),
+  AccessControlModule.forRoles(roles),
   UsuariosModule,
   OrganismosModule,
   SectoresModule,

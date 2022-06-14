@@ -75,6 +75,13 @@ export class Usuario {
     })
     sector_id: number;
 
+    @Column({
+        type: 'simple-array',
+        nullable: true,
+        //default: "['ADMIN']"
+    })
+    roles: string[];
+
     @CreateDateColumn()
     alta: Date;
 
