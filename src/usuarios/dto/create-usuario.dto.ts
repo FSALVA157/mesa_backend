@@ -52,5 +52,4 @@ export class CreateUsuarioDto {
     })
     roles: string[]
 
-
 }

@@ -4,6 +4,8 @@ import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { Request } from 'express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { ACGuard, UseRoles } from 'nest-access-control';
+import { AppResources } from 'src/auth/roles/app.roles';
 
 @Controller('usuarios')
 export class UsuariosController {
@@ -15,6 +17,12 @@ export class UsuariosController {
     return this.usuariosService.create(createUsuarioDto);
   }
 
+  @UseGuards(ACGuard)
+  @UseRoles({
+    action: 'read',
+    possession: 'any',
+    resource: 'USUARIO'
+  })
   @UseGuards(JwtAuthGuard)  
   @Get()
   findAll() {
