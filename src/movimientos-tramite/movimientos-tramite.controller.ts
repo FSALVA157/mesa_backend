@@ -85,13 +85,18 @@ export class MovimientosTramiteController {
   @Post('recibir-tramite')
   async recibir_tramite (
     @Body() 
-    data: CreateMovimientoTramiteDto
+    data: CreateMovimientoTramiteDto,
+    @Req()
+    req: Request
   ): Promise<MovimientoTramite> {    
    
+    let num_mov_anterior: number = parseInt(req.query.num_mov_anterior.toString());
+    if(isNaN(num_mov_anterior)) throw new NotFoundException("El número de movimiento no es un entero");
+    
     //buscar movimiento anterior
     let movimiento_anterior: MovimientoTramite;
     try{
-      movimiento_anterior= await this.movimientosTramiteService.findUltimoXNumTramite(data.tramite_numero);
+      movimiento_anterior= await this.movimientosTramiteService.findOne(data.tramite_numero);
       //controles en el ultimo movimiento del tramite
       if(!movimiento_anterior.enviado){
         throw new NotFoundException ("El tramite no fue enviado por el último sector que lo recibió");
@@ -101,7 +106,7 @@ export class MovimientosTramiteController {
         throw new NotFoundException ("Sólo el sector destino puede recibir el tramite");
       }
     }catch (error){
-      throw new NotFoundException('Error buscando: ',error.message);
+      throw new NotFoundException('Error buscando el movimiento anterior: ',error.message);
     }
     
     //guardar/recibir tramite

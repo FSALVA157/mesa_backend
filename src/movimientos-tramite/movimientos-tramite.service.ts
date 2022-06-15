@@ -70,16 +70,29 @@ export class MovimientosTramiteService {
 
   //BUSCAR HISTORIAL DEL TRAMITE XNUM_TRAMITE
   async findHistorialXSector(num_tramite: number, id_sector:number) {
-    const respuesta = await this.movimientosTramiteRepository.findAndCount(
+    //buscar existencia de movimientos para este sector
+    const movimientos = await this.movimientosTramiteRepository.findAndCount(
       {where: {
           tramite_numero: num_tramite,
           sector_destino_id: id_sector
         }
       }
     );
-    console.log("array 1", respuesta[1]);
-    if (!respuesta) throw new NotFoundException("No se encontró el registro de movimiento de tramite solicitado.");
-    return respuesta;
+    console.log("array 1", movimientos[1]);    
+    if (!movimientos) throw new NotFoundException("No se encontró el registro de movimiento de tramite solicitado.");
+    
+    //buscar historial del tramite
+    if(movimientos[1] == 0) throw new NotFoundException("Su sector no puede ver el historial de éste tramite.");
+    
+    const historial_tramite = await this.movimientosTramiteRepository.findAndCount(
+      {where: {
+          tramite_numero: num_tramite
+        }
+      }
+    );
+    if(historial_tramite[1] == 0) throw new NotFoundException("No se encontro el historial del tramite");
+
+    return historial_tramite;
   }
   //FIN BUSCAR HISTORIAL DEL TRAMITE XNUM_TRAMITE..................................................................
 
