@@ -41,7 +41,7 @@ export class MovimientosTramiteService {
   }
   //FIN BUSCAR MOVIMIENTO DEL TRAMITE XNUM_MOVIMIENTO..................................................................
 
-  //BUSCAR ULTIMO MOVIMIENTO DEL TRAMITE XNUM_TRAMITE
+  //BUSCAR ULTIMO MOVIMIENTO DEL TRAMITE X NUM_TRAMITE
   async findUltimoXNumTramite(num_tramite: number) {
     const respuesta = await this.movimientosTramiteRepository.findOne(
       {where: {
@@ -53,7 +53,7 @@ export class MovimientosTramiteService {
     if (!respuesta) throw new NotFoundException("No se encontró el registro de movimiento de tramite solicitado.");
     return respuesta;
   }
-  //FIN BUSCAR ULTIMO MOVIMIENTO DEL TRAMITE XNUM_TRAMITE..................................................................
+  //FIN BUSCAR ULTIMO MOVIMIENTO DEL TRAMITE X NUM_TRAMITE..................................................................
 
   //BUSCAR HISTORIAL DEL TRAMITE XNUM_TRAMITE
   async findHistorial(num_tramite: number) {
