@@ -11,18 +11,24 @@ import { AppResources } from 'src/auth/roles/app.roles';
 export class UsuariosController {
   constructor(private readonly usuariosService: UsuariosService) {}
 
+  @UseGuards(ACGuard)
+  @UseRoles({
+    action:'create',
+    possession: 'any',
+    resource: AppResources.USUARIO
+  })
   @UseGuards(JwtAuthGuard)  
   @Post()
   create(@Body() createUsuarioDto: CreateUsuarioDto) {
     return this.usuariosService.create(createUsuarioDto);
   }
 
-  @UseGuards(ACGuard)
-  @UseRoles({
-    action: 'read',
-    possession: 'any',
-    resource: 'USUARIO'
-  })
+   @UseGuards(ACGuard)
+   @UseRoles({
+        action: 'read',
+        possession: 'any',
+        resource: 'USUARIO'
+   })
   @UseGuards(JwtAuthGuard)  
   @Get()
   findAll() {
