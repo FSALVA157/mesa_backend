@@ -20,7 +20,7 @@ export class LocalStrategy extends PassportStrategy(Strategy,"local"){
     async validate(user: string, password: string){
         let usuario = null;
         usuario = await this.authService.validate(user, password);
-        if(!usuario) throw new UnauthorizedException('El usuario o la contreseña no son válidos');
+        if(!usuario) throw new UnauthorizedException('El usuario o la contraseña no son válidos');
         return usuario;
     }
     

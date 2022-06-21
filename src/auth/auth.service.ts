@@ -9,7 +9,7 @@ export class AuthService {
         private readonly userService: UsuariosService,
         private readonly jwtService: JwtService
     ){}
-
+    //esta función es usada por local Strategy para verificar la existencia del usuario y devolver sus datos
     async validate(usuario: string, password: string){
         try {
           const usuarioData = await  this.userService.findOneByUser(usuario);
@@ -21,15 +21,16 @@ export class AuthService {
           }
           
         } catch (error) {
-            throw new BadRequestException('Error en petición de login', error.message);
+            throw new BadRequestException('Error al Validar Usuario', error.message);
         }
         
     }
     async login(usuario: any){
         const payload = {
             username: usuario.nombre,
-            roles: ["NORMAL","USUARIO"],
-            sub: usuario.id_usuario
+            roles: usuario.roles,
+            sub: usuario.id_usuario,
+            sector: usuario.sector_id
         };
         return {
             access_token: this.jwtService.sign(payload)

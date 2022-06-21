@@ -10,7 +10,6 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
           //console.log('MENSAJE', err.message);
           throw err || new UnauthorizedException('Falla en la Autenticación');
         }
-        console.log(user);
         return user;
       }
 }
