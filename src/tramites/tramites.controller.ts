@@ -8,6 +8,19 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 export class TramitesController {
   constructor(private readonly tramitesService: TramitesService) {}
 
+  
+
+  // @UseGuards(JwtAuthGuard)
+  @Get()
+  findAll() {
+    return this.tramitesService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.tramitesService.findOne(+id);
+  }
+
   @Post()
   create(@Body() data: CreateTramiteDto) {
     //obtener año actual   
@@ -19,17 +32,6 @@ export class TramitesController {
     data.fecha = new Date();
 
     return this.tramitesService.create(data);
-  }
-
-  // @UseGuards(JwtAuthGuard)
-  @Get()
-  findAll() {
-    return this.tramitesService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.tramitesService.findOne(+id);
   }
 
   @Put(':id')
