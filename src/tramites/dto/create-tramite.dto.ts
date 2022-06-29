@@ -1,4 +1,4 @@
-import { IsDateString, isDateString, IsInt, IsNotEmpty, IsString, MaxLength, MinLength } from "class-validator";
+import { IsDateString, isDateString, IsInt, IsNotEmpty, IsOptional, IsString, Length, MaxLength, MinLength } from "class-validator";
 
 export class CreateTramiteDto {
 
@@ -7,44 +7,41 @@ export class CreateTramiteDto {
     numero_tramite: number;
     
     @IsString()
-    @IsNotEmpty()        
-    @MaxLength(100)
-    @MinLength(1)
+    @IsNotEmpty({message:'El asunto no puede ser vacío'}) 
+    @Length(1,100,{message:'El asunto debe tener entre $constraint1 y $constraint2 caracteres'})
     asunto: string;
     
+    
     @IsString()        
-    @MaxLength(50)
-    @MinLength(0)
+    @Length(0,50,{message:'El expediente/nota debe tener entre $constraint1 y $constraint2 caracteres'})
     expediente_nota: string;
     
     @IsString()        
-    @MaxLength(50)
-    @MinLength(1)
+    @Length(1,50,{message:'La persona de referencia debe tener entre $constraint1 y $constraint2 caracteres'})
     persona_referencia: string;
 
     @IsString()
-    @IsNotEmpty()        
-    @MaxLength(500)
-    @MinLength(1)
+    @IsNotEmpty({message:'La descripción no puede ser vacía'}) 
+    @Length(1,500,{message:'La descripción debe tener entre $constraint1 y $constraint2 caracteres'})
     descripcion: string;
 
-    @IsDateString()
+    // @IsDateString()
     fecha: Date;
 
     // @IsInt()
     // @IsNotEmpty()
     anio: number;
 
-    @IsInt()
-    @IsNotEmpty()
+    @IsInt({message:'El tipo de tramite debe ser un número.'})
+    @IsNotEmpty({message:'El tipo de tramite no debe ser vacío.'})
     tipo_tramite_id: number;
 
-    @IsInt()
-    @IsNotEmpty()
+    @IsInt({message:'El sector debe ser un número.'})
+    @IsNotEmpty({message:'El sector no debe ser vacío.'})
     sector_id: number;
 
-    @IsInt()
-    @IsNotEmpty()
+    @IsInt({message:'El usuario debe ser un número.'})
+    @IsNotEmpty({message:'El usuario no debe ser vacío.'})
     usuario_id: number;
 
 }
