@@ -11,7 +11,7 @@ export class CreateTramiteDto {
     @Length(1,100,{message:'El asunto debe tener entre $constraint1 y $constraint2 caracteres'})
     asunto: string;
     
-    
+    @IsOptional()
     @IsString()        
     @Length(0,50,{message:'El expediente/nota debe tener entre $constraint1 y $constraint2 caracteres'})
     expediente_nota: string;
