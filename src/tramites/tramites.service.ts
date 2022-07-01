@@ -23,6 +23,14 @@ export class TramitesService {
     );
   }
 
+  async findTramitesConMovimientos(){
+    const tramites = await this.tramitesRepository.createQueryBuilder('tramites')
+    .leftJoinAndSelect("movimientos_tramite.tramite_numero", "tramites.numero_tramite")
+    .getMany()
+
+    console.log("movimientos", tramites);
+  }
+
   async findOne(id: number) {
     //const respuesta = await this.tramitesRepository.findOneOrFail(id);
     const respuesta = await this.tramitesRepository.findOne(id);

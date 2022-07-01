@@ -1,7 +1,8 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { TipoTramite } from '../../tipos-tramite/entities/tipo-tramite.entity';
 import { Sector } from '../../sectores/entities/sector.entity';
 import { Usuario } from 'src/usuarios/entities/usuario.entity';
+import { MovimientoTramite } from '../../movimientos-tramite/entities/movimiento-tramite.entity';
 
 @Entity('tramites')
 export class Tramite {
@@ -85,6 +86,11 @@ export class Tramite {
     })
     sector : Sector;
     //FIN SECTOR   
+
+    //MOVIMIENTO TRAMITE
+    @OneToMany(() => MovimientoTramite, (movimiento_tramite) => movimiento_tramite.tramite_numero)    
+    movimientos: MovimientoTramite[];
+    //FIN MOVIMIENTO TRAMITE
 
     //USUARIO
     @Column({

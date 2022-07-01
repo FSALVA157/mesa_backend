@@ -17,6 +17,11 @@ export class TramitesController {
     return this.tramitesService.findAll();
   }
 
+  @Get('tramite-movimientos')
+  findTramiteConMovimientos() {
+    return this.tramitesService.findTramitesConMovimientos();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.tramitesService.findOne(+id);
