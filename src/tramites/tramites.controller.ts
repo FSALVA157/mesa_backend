@@ -4,6 +4,7 @@ import { CreateTramiteDto } from './dto/create-tramite.dto';
 import { UpdateTramiteDto } from './dto/update-tramite.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Tramite } from 'src/tramites/entities/tramite.entity';
+import { CreateMovimientoTramiteDto } from 'src/movimientos-tramite/dto/create-movimiento-tramite.dto';
 
 @Controller('tramites')
 export class TramitesController {
@@ -37,6 +38,26 @@ export class TramitesController {
     data.fecha = new Date();
     return this.tramitesService.create(data);
   }
+
+  //PRUEBA DE CREAR EL TRAMITE Y MOVIMIENTO
+  @Post('crear-tramite')
+  nuevoTramite(
+    @Body() 
+    tramiteCompleto: any
+    // @Body()  
+    // movimiento: CreateMovimientoTramiteDto
+    ) {
+      //let tramite: CreateTramiteDto = tramiteCompleto.tramite
+    //obtener año actual   
+    let anio:number= new Date().getFullYear();
+    
+    //cargar datos por defecto
+    // tramite.anio = anio;    
+    // tramite.fecha = new Date();
+    // console.log("tramite", tramite);
+    // return this.tramitesService.create(tramite);
+  }
+  //FIN PRUEBA DE CREAR EL TRAMITE Y MOVIMIENTO
 
   @Put(':id')
   update(@Param('id') id: string, @Body() updateTramiteDto: UpdateTramiteDto) {
