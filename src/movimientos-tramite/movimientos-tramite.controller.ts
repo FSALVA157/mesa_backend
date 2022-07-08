@@ -158,7 +158,6 @@ export class MovimientosTramiteController {
     //data.sector_destino_id = 3;
     data.fecha_salida= new Date();
     data.enviado = true;
-    
     //controlar destino
     const sector_destino = await this.sectorRepository.findOne(data.sector_destino_id);
     const sector_actual = await this.sectorRepository.findOne(data.sector_id);    

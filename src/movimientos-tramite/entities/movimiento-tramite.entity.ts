@@ -73,7 +73,8 @@ export class MovimientoTramite {
     //SECTOR DESTINO    
     @Column({
         type: 'int',
-        nullable: false
+        nullable: false,
+        default:1
     })
     sector_destino_id: number;
 

@@ -145,7 +145,7 @@ export class MovimientosTramiteService {
 
   //SALIDA MOVIMIENTO DEL TRAMITE
   async tramite_salida(num_movimiento: number, data: UpdateMovimientoTramiteDto) {    
-
+    
     try{
       const respuesta = await this.movimientosTramiteRepository.update({num_movimiento_tramite: num_movimiento}, data);
       if((await respuesta).affected == 0) throw new NotFoundException("No se efectuó la salida del tramite. Intente nuevamente.");
