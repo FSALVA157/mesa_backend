@@ -147,32 +147,48 @@ export class MovimientosTramiteController {
   
 
   //SALIDA MOVIMIENTO DEL TRAMITE
-  @Put('/tramite-salida/:num_movimiento')
+  @Put('/tramite-salida')
   async movimiento_salida(
-    @Param('num_movimiento') 
-    num_movimiento: string, 
+    // @Param('num_movimiento') 
+    // num_movimiento: string, 
     @Body() 
-    data: UpdateMovimientoTramiteDto
+    data: UpdateMovimientoTramiteDto,
+    @Req()
+    req: Request
     ) {
-    
-    //data.sector_destino_id = 3;
-    data.fecha_salida= new Date();
-    data.enviado = true;
-    //controlar destino
-    const sector_destino = await this.sectorRepository.findOne(data.sector_destino_id);
-    const sector_actual = await this.sectorRepository.findOne(data.sector_id);    
-    
-    if(sector_actual.organismo_id != sector_destino.organismo_id){
-      if(sector_actual.es_mesa_entrada){
-        if(!sector_destino.es_mesa_entrada){
-          throw new NotFoundException("El sector destino debe ser mesa de entrada del Organismo destino");
-        }
-        
-      }else{
-        throw new NotFoundException("El sector destino debe ser del mismo Organismo de su sector.");
+      let num_mov: number = parseInt(req.query.num_movimiento.toString());
+      console.log("data", data);
+      console.log("num_mov", num_mov);
+      if(isNaN(num_mov)) throw new NotFoundException("El número de movimiento no es un entero");
+      //data.sector_destino_id = 3;
+      data.fecha_salida= new Date();
+      data.enviado = true;
+      //controlar destino
+      let movimiento: MovimientoTramite= new MovimientoTramite();
+      movimiento = await this.movimientosTramiteService.findOneXNumMov(num_mov);
+      
+      //RECORDAR VALIDAR SECTOR CON TOKEN......
+      const sector_destino = await this.sectorRepository.findOne(data.sector_destino_id);
+      const sector_actual = await this.sectorRepository.findOne(data.sector_id);    
+      
+      if(movimiento.sector_id != sector_actual.id_sector){
+        throw new NotFoundException("El tramite no puede ser enviado por este sector.");
       }
-    }
-    return this.movimientosTramiteService.tramite_salida(+num_movimiento, data);
+      if(!movimiento.enviado ){
+        throw new NotFoundException("El tramite ya fue enviado por este sector.");
+      }          
+      
+      if(sector_actual.organismo_id != sector_destino.organismo_id){
+        if(sector_actual.es_mesa_entrada){
+          if(!sector_destino.es_mesa_entrada){
+            throw new NotFoundException("El sector destino debe ser mesa de entrada del Organismo destino");
+          }
+          
+        }else{
+          throw new NotFoundException("El sector destino debe ser del mismo Organismo de su sector.");
+        }
+      }
+      return this.movimientosTramiteService.tramite_salida(num_mov, data);
   }
   //FIN SALIDA MOVIMIENTO DEL TRAMITE........................................................
 

@@ -1,8 +1,8 @@
-import { IsDateString, IsInt, IsNotEmpty, IsString, MaxLength, MinLength, IsBoolean, IsEmpty, IsOptional, Length } from 'class-validator';
+import { IsDateString, IsInt, IsNotEmpty, IsString, MaxLength, MinLength, IsBoolean, IsEmpty, IsOptional, Length, Min, Max } from 'class-validator';
 
 export class CreateMovimientoTramiteDto {
     
-    
+    @IsInt({message: "El campo Número de movimiento debe ser entero"})
     num_movimiento_tramite: number;
 
     @IsInt({message: "El campo Tramite número salida debe ser entero"})
@@ -15,6 +15,8 @@ export class CreateMovimientoTramiteDto {
     fecha_ingreso: Date
    
     @IsInt({message: "El campo Fojas ingreso debe ser entero"})
+    @Min(0,{message: 'Las Fojas ingreso debe ser 0(cero) o mayor'})
+    @Max(10000,{message: 'La Fojas ingreso no debe ser mayor a 10000(cero)'})
     fojas_ingreso: number;
    
     
@@ -33,6 +35,8 @@ export class CreateMovimientoTramiteDto {
     
     @IsOptional()
     @IsInt({message: "El campo Fojas salida debe ser entero"})
+    @Min(0,{message: 'Las Fojas salida debe ser 0(cero) o mayor'})
+    @Max(10000,{message: 'La Fojas salida no debe ser mayor a 10000(cero)'})
     fojas_salida: number;   
 
     @IsOptional()     
