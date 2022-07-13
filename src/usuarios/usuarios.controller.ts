@@ -26,7 +26,7 @@ export class UsuariosController {
    @UseGuards(ACGuard)
    @UseRoles({
         action: 'read',
-        possession: 'any',
+        possession: 'own',
         resource: 'USUARIO'
    })
   @UseGuards(JwtAuthGuard)  
