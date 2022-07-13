@@ -2,7 +2,7 @@ import { IsDateString, IsInt, IsNotEmpty, IsString, MaxLength, MinLength, IsBool
 
 export class CreateMovimientoTramiteDto {
     
-    @IsInt({message: "El campo Número de movimiento debe ser entero"})
+    //@IsInt({message: "El campo Número de movimiento debe ser entero"})
     num_movimiento_tramite: number;
 
     @IsInt({message: "El campo Tramite número salida debe ser entero"})

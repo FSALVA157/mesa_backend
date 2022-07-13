@@ -137,17 +137,11 @@ export class MovimientosTramiteController {
   }
   //FIN RECIBIR MOVIMIENTO DEL TRAMITE.......................................................
   
-  @Put(':id')
-  update(
-    @Param('id') id: string, 
-    @Body() updateMovimientosTramiteDto: UpdateMovimientoTramiteDto
-    ) {
-    return this.movimientosTramiteService.update(+id, updateMovimientosTramiteDto);
-  }
+  
   
 
   //SALIDA MOVIMIENTO DEL TRAMITE
-  @Put('/tramite-salida')
+  @Put('tramite-salida')
   async movimiento_salida(
     // @Param('num_movimiento') 
     // num_movimiento: string, 
@@ -156,11 +150,16 @@ export class MovimientosTramiteController {
     @Req()
     req: Request
     ) {
-      let num_mov: number = parseInt(req.query.num_movimiento.toString());
-      console.log("data", data);
-      console.log("num_mov", num_mov);
-      if(isNaN(num_mov)) throw new NotFoundException("El número de movimiento no es un entero");
-      //data.sector_destino_id = 3;
+      let num_mov: number;
+      if(req.query.num_movimiento){
+        num_mov = parseInt(req.query.num_movimiento.toString())
+      }
+      else{
+        throw new NotFoundException("Debe enviar el parametro número de movimiento.");
+      }      
+      
+      if (isNaN(num_mov)) throw new NotFoundException("El número de movimiento debe ser un entero");
+
       data.fecha_salida= new Date();
       data.enviado = true;
       //controlar destino
@@ -174,7 +173,7 @@ export class MovimientosTramiteController {
       if(movimiento.sector_id != sector_actual.id_sector){
         throw new NotFoundException("El tramite no puede ser enviado por este sector.");
       }
-      if(!movimiento.enviado ){
+      if(movimiento.enviado ){
         throw new NotFoundException("El tramite ya fue enviado por este sector.");
       }          
       
@@ -191,6 +190,14 @@ export class MovimientosTramiteController {
       return this.movimientosTramiteService.tramite_salida(num_mov, data);
   }
   //FIN SALIDA MOVIMIENTO DEL TRAMITE........................................................
+
+  @Put(':id')
+  update(
+    @Param('id') id: string, 
+    @Body() updateMovimientosTramiteDto: UpdateMovimientoTramiteDto
+    ) {
+    return this.movimientosTramiteService.update(+id, updateMovimientosTramiteDto);
+  }
 
   @Delete(':id')
   remove(@Param('id') id: string) {

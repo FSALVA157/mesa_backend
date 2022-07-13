@@ -8,9 +8,7 @@ import { CreateMovimientoTramiteDto } from 'src/movimientos-tramite/dto/create-m
 
 @Controller('tramites')
 export class TramitesController {
-  constructor(private readonly tramitesService: TramitesService) {}
-
-  
+  constructor(private readonly tramitesService: TramitesService) {} 
 
   // @UseGuards(JwtAuthGuard)
   @Get()
