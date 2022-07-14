@@ -25,6 +25,7 @@ export class MovimientosTramiteService {
     
     return await this.movimientosTramiteRepository.find(
       {
+          relations: ['tramite'],
           order:{
               num_movimiento_tramite: "ASC"
           }

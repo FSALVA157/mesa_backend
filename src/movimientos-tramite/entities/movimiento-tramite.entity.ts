@@ -26,11 +26,11 @@ export class MovimientoTramite {
     })
     tramite_numero: number;
    
-    @ManyToOne(type => Tramite,tramite => tramite.movimientos,{eager : true})
+    @ManyToOne(type => Tramite,{eager : false})
     @JoinColumn({
         name: 'tramite_numero',
         referencedColumnName: 'numero_tramite'
-    })
+    })    
     tramite: Tramite;
     //FIN TRAMITE
 

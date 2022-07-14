@@ -12,23 +12,59 @@ export class TramitesService {
     private readonly tramitesRepository: Repository<Tramite>
   ){}
 
-  async findAll() {
-    
+  async findAll() {    
     return await this.tramitesRepository.find(
       {
-          order:{
-              numero_tramite: "ASC"
-          }
+        order:{
+            numero_tramite: "ASC"
+        }
       }
     );
   }
+  
+  //BUSCAR TRAMITE X SECTOR
+  async findTramiteXSector(id_sector:number) {
+    //buscar existencia de movimientos para este sector
+    const movimientos = await this.tramitesRepository.findAndCount(
+      
+      {
+        relations: ['movimientos'],
+        where: {
+          sector_id: id_sector
+        }
+      }
+    );
+    // console.log("array 1", movimientos[1]);    
+    // if (!movimientos) throw new NotFoundException("No se encontró el registro de movimiento de tramite solicitado.");
+    
+    // //buscar historial del tramite
+    // if(movimientos[1] == 0) throw new NotFoundException("Su sector no puede ver el historial de éste tramite.");
+    
+    // const historial_tramite = await this.movimientosTramiteRepository.findAndCount(
+    //   {where: {
+    //       tramite_numero: num_tramite
+    //     }
+    //   }
+    // );
+    // if(historial_tramite[1] == 0) throw new NotFoundException("No se encontro el historial del tramite");
+
+    //return historial_tramite;
+
+    return movimientos;
+  }
+  //FIN BUSCAR TRAMITE X SECTOR..................................................................
+
+
 
   async findTramitesConMovimientos(){
-    const tramites = await this.tramitesRepository.createQueryBuilder('tramites')
-    .leftJoinAndSelect("movimientos_tramite.tramite_numero", "tramites.numero_tramite")
-    .getMany()
-
-    console.log("movimientos", tramites);
+    return await this.tramitesRepository.find(
+      {
+        relations: ['movimientos'],
+        order:{
+            numero_tramite: "ASC"
+        }
+      }
+    );
   }
 
   async findOne(id: number) {

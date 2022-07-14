@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, UseGuards, Req, NotFoundException } from '@nestjs/common';
 import { TramitesService } from './tramites.service';
 import { CreateTramiteDto } from './dto/create-tramite.dto';
 import { UpdateTramiteDto } from './dto/update-tramite.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Tramite } from 'src/tramites/entities/tramite.entity';
 import { CreateMovimientoTramiteDto } from 'src/movimientos-tramite/dto/create-movimiento-tramite.dto';
+import { Request } from 'express';
 
 @Controller('tramites')
 export class TramitesController {
@@ -19,6 +20,18 @@ export class TramitesController {
   @Get('tramite-movimientos')
   findTramiteConMovimientos() {
     return this.tramitesService.findTramitesConMovimientos();
+  }
+
+  @Get('tramite-movimientos-sector')
+  
+  async findTramiteConMovimientosXSector(
+    @Req()
+    req: Request
+  ) {
+    
+    let sector: number = parseInt(req.query.id_sector.toString());
+    if(isNaN(sector)) throw new NotFoundException("El id de sector no es un entero");
+    return this.tramitesService.findTramiteXSector(sector);
   }
 
   @Get(':id')

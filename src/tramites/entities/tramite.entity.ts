@@ -87,9 +87,17 @@ export class Tramite {
     sector : Sector;
     //FIN SECTOR   
 
-    //MOVIMIENTO TRAMITE
-    @OneToMany(() => MovimientoTramite, (movimiento_tramite) => movimiento_tramite.tramite_numero)    
-    movimientos: MovimientoTramite[];
+    //MOVIMIENTO TRAMITE    
+    // @OneToMany(type => MovimientoTramite,movimiento => movimiento.tramite,{
+        
+    //     })
+    //     @JoinColumn({
+    //         name : 'numero_tramite',
+    //         referencedColumnName : 'tramite_numero'
+    //     })
+    // movimientos : MovimientoTramite[];
+    @OneToMany(() => MovimientoTramite, (movimiento) => movimiento.tramite)
+    movimientos : MovimientoTramite[];
     //FIN MOVIMIENTO TRAMITE
 
     //USUARIO
