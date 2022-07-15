@@ -5,7 +5,7 @@ export class CreateMovimientoTramiteDto {
     //@IsInt({message: "El campo Número de movimiento debe ser entero"})
     num_movimiento_tramite: number;
 
-    @IsInt({message: "El campo Tramite número salida debe ser entero"})
+    @IsInt({message: "El campo número de tramite debe ser entero"})
     tramite_numero: number;
    
     @IsInt({message: "El campo Sector origen debe ser entero"})

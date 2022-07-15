@@ -56,6 +56,42 @@ export class MovimientosTramiteController {
   }
   //BUSCAR HISTORIAL MOVIMIENTO DEL TRAMITE XID......................................................
 
+  //BUSCAR MOVIMIENTOS PENDIENTES Xsector
+  @Get('pendientes')
+  async findPendientesXSector(
+    @Req()
+    req: Request
+  ) {
+    let sector: number = parseInt(req.query.id_sector.toString());
+    if(isNaN(sector)) throw new NotFoundException("El id de sector no es un número entero");
+    return this.movimientosTramiteService.findPendientesXSector(sector);
+  }
+  //BUSCAR MOVIMIENTOS PENDIENTES Xsector.....................................................
+
+  //BUSCAR MOVIMIENTOS RECIBIDOS Xsector
+  @Get('recibidos')
+  async findRecibidosXSector(
+    @Req()
+    req: Request
+  ) {
+    let sector: number = parseInt(req.query.id_sector.toString());
+    if(isNaN(sector)) throw new NotFoundException("El id de sector no es un número entero");
+    return this.movimientosTramiteService.findRecibidosXSector(sector);
+  }
+  //BUSCAR MOVIMIENTOS RECIBIDOS Xsector.....................................................
+
+  //BUSCAR MOVIMIENTOS ENVIADOS Xsector
+  @Get('enviados')
+  async findEnviadosXSector(
+    @Req()
+    req: Request
+  ) {
+    let sector: number = parseInt(req.query.id_sector.toString());
+    if(isNaN(sector)) throw new NotFoundException("El id de sector no es un número entero");
+    return this.movimientosTramiteService.findRecibidosXSector(sector);
+  }
+  //BUSCAR MOVIMIENTOS ENVIADOS Xsector.....................................................
+
   //BUSCAR MOVIMIENTO DEL TRAMITE XID
   @Get(':id')
   async findOne(@Param('id') id: string) {
@@ -96,7 +132,7 @@ export class MovimientosTramiteController {
     //buscar movimiento anterior
     let movimiento_anterior: MovimientoTramite;
     try{
-      movimiento_anterior= await this.movimientosTramiteService.findOne(data.tramite_numero);
+      movimiento_anterior= await this.movimientosTramiteService.findOneXNumMov(num_mov_anterior);
       //controles en el ultimo movimiento del tramite
       if(!movimiento_anterior.enviado){
         throw new NotFoundException ("El tramite no fue enviado por el último sector que lo recibió");

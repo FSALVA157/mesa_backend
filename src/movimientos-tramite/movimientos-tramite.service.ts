@@ -21,8 +21,7 @@ export class MovimientosTramiteService {
   ){}
 
   //BUSCAR TODOS LOS MOVIMIENTO DEL TRAMITE
-  async findAll() {
-    
+  async findAll() {    
     return await this.movimientosTramiteRepository.find(
       {
           relations: ['tramite'],
@@ -69,7 +68,7 @@ export class MovimientosTramiteService {
   }
   //FIN BUSCAR HISTORIAL DEL TRAMITE XNUM_TRAMITE..................................................................
 
-  //BUSCAR HISTORIAL DEL TRAMITE XNUM_TRAMITE
+  //BUSCAR HISTORIAL DEL TRAMITE XNUM_TRAMITE y SECTOR
   async findHistorialXSector(num_tramite: number, id_sector:number) {
     //buscar existencia de movimientos para este sector
     const movimientos = await this.movimientosTramiteRepository.findAndCount(
@@ -95,9 +94,52 @@ export class MovimientosTramiteService {
 
     return historial_tramite;
   }
-  //FIN BUSCAR HISTORIAL DEL TRAMITE XNUM_TRAMITE..................................................................
+  //FIN BUSCAR HISTORIAL DEL TRAMITE XNUM_TRAMITE Y SECTOR..................................................................
 
-  
+  //BUSCAR MOVIMIENTOS PENDIENTES X SECTOR
+  async findPendientesXSector(id_sector:number) {
+    const movimientos = await this.movimientosTramiteRepository.findAndCount(
+      {where: {
+          recibido: false,
+          sector_destino_id: id_sector
+        }
+      }
+    );   
+
+    return movimientos;
+  }
+  //FIN BUSCAR HISTORIAL DEL TRAMITE XNUM_TRAMITE Y SECTOR..................................................................
+
+  //BUSCAR MOVIMIENTOS RECIBIDOS X SECTOR
+  async findRecibidosXSector(id_sector:number) {
+    const movimientos = await this.movimientosTramiteRepository.findAndCount(
+      {where: {
+          enviado: false,
+          sector_id: id_sector
+        }
+      }
+    );   
+
+    return movimientos;
+  }
+  //FIN B//BUSCAR MOVIMIENTOS RECIBIDOS X SECTOR..................................................................
+
+  //BUSCAR MOVIMIENTOS RECIBIDOS X SECTOR
+  async findEnviadosXSector(id_sector:number) {
+    const movimientos = await this.movimientosTramiteRepository.findAndCount(
+      {where: {
+          enviado: true,
+          recibido: false,
+          sector_id: id_sector
+        }
+      }
+    );   
+    
+    return movimientos;
+  }
+  //FIN B//BUSCAR MOVIMIENTOS RECIBIDOS X SECTOR..................................................................
+
+
   //BUSCAR MOVIMIENTO DEL TRAMITE XID
   async findOne(id: number) {
     //const respuesta = await this.movimientosTramiteRepository.findOneOrFail(id);

@@ -57,7 +57,7 @@ export class TramitesService {
 
 
   async findTramitesConMovimientos(){
-    return await this.tramitesRepository.find(
+    return await this.tramitesRepository.findAndCount(
       {
         relations: ['movimientos'],
         order:{
