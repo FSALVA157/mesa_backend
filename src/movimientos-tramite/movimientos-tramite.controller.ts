@@ -88,7 +88,7 @@ export class MovimientosTramiteController {
   ) {
     let sector: number = parseInt(req.query.id_sector.toString());
     if(isNaN(sector)) throw new NotFoundException("El id de sector no es un número entero");
-    return this.movimientosTramiteService.findRecibidosXSector(sector);
+    return this.movimientosTramiteService.findEnviadosXSector(sector);
   }
   //BUSCAR MOVIMIENTOS ENVIADOS Xsector.....................................................
 

@@ -99,7 +99,10 @@ export class MovimientosTramiteService {
   //BUSCAR MOVIMIENTOS PENDIENTES X SECTOR
   async findPendientesXSector(id_sector:number) {
     const movimientos = await this.movimientosTramiteRepository.findAndCount(
-      {where: {
+      {
+        relations: ['tramite'],
+        where: {
+          //enviado: true,
           recibido: false,
           sector_destino_id: id_sector
         }
@@ -112,9 +115,13 @@ export class MovimientosTramiteService {
 
   //BUSCAR MOVIMIENTOS RECIBIDOS X SECTOR
   async findRecibidosXSector(id_sector:number) {
+    console.log("sector", id_sector);
     const movimientos = await this.movimientosTramiteRepository.findAndCount(
-      {where: {
+      {
+        relations: ['tramite'],
+        where: {
           enviado: false,
+          recibido:false,
           sector_id: id_sector
         }
       }
@@ -127,7 +134,9 @@ export class MovimientosTramiteService {
   //BUSCAR MOVIMIENTOS RECIBIDOS X SECTOR
   async findEnviadosXSector(id_sector:number) {
     const movimientos = await this.movimientosTramiteRepository.findAndCount(
-      {where: {
+      {
+        relations: ['tramite'],
+        where: {
           enviado: true,
           recibido: false,
           sector_id: id_sector
