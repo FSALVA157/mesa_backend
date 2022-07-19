@@ -119,7 +119,7 @@ export class MovimientoTramite {
         default: false,
         nullable: false
     })
-    recibido: boolean;
+    recibido_destino: boolean;
 
     @Column({
         type: 'bool',

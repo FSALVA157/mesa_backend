@@ -49,7 +49,7 @@ export class CreateMovimientoTramiteDto {
 
     @IsEmpty({message: "No debe enviar el campo recibido"})
     //@IsBoolean()
-    recibido: boolean;
+    recibido_destino: boolean;
     
     @IsEmpty({message: "No debe enviar el campo impreso"})
     impreso: boolean;

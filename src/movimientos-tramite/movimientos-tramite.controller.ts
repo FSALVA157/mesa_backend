@@ -48,7 +48,6 @@ export class MovimientosTramiteController {
     req: Request
   ) {
     let num_tramite: number = parseInt(req.query.num_tramite.toString());
-    console.log("tramite num", num_tramite);
     if(isNaN(num_tramite)) throw new NotFoundException("El número de tramite no es un entero");
     let sector: number = parseInt(req.query.id_sector.toString());
     if(isNaN(sector)) throw new NotFoundException("El id de sector no es un entero");
@@ -94,8 +93,7 @@ export class MovimientosTramiteController {
 
   //BUSCAR MOVIMIENTO DEL TRAMITE XID
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    
+  async findOne(@Param('id') id: string) {    
     
     return this.movimientosTramiteService.findOne(+id);
   }
@@ -151,13 +149,12 @@ export class MovimientosTramiteController {
     data.sector_destino_id= 1;
     data.fecha_ingreso = new Date();    
     data.enviado= false;
-    data.recibido= false;
+    data.recibido_destino= false;
     try{
       movimiento_nuevo= await this.movimientosTramiteService.create(data);
-      console.log("respuesta recibr tramite", movimiento_nuevo);
 
       //actualizar como recibido el movimiento anterior
-      movimiento_anterior.recibido=true;
+      movimiento_anterior.recibido_destino=true;
       try{
         this.movimientosTramiteService.update(movimiento_anterior.id_movimiento_tramite, movimiento_anterior);
       }catch(error){
@@ -174,8 +171,6 @@ export class MovimientosTramiteController {
   //FIN RECIBIR MOVIMIENTO DEL TRAMITE.......................................................
   
   
-  
-
   //SALIDA MOVIMIENTO DEL TRAMITE
   @Put('tramite-salida')
   async movimiento_salida(
