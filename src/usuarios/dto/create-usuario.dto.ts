@@ -1,4 +1,6 @@
-import { IsBoolean, IsEmail, IsEmpty, IsIn, IsInt, IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
+import { IsArray, IsBoolean, IsEmail, IsEmpty, IsEnum, IsIn, IsInt, IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
+import { AppRoles } from "src/auth/roles/app.roles";
+import { EnumToString } from "src/helpers/enumToString";
 
 export class CreateUsuarioDto {
 
@@ -43,5 +45,11 @@ export class CreateUsuarioDto {
     @IsOptional()
     sector_id: number;   
 
+    @IsArray()
+    @IsEnum(AppRoles, {
+        each: true,
+        message: `must be a valid role value, ${EnumToString(AppRoles)}`
+    })
+    roles: string[]
 
 }
