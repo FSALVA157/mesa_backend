@@ -22,8 +22,7 @@ export class TramitesController {
     return this.tramitesService.findTramitesConMovimientos();
   }
 
-  @Get('tramite-movimientos-sector')
-  
+  @Get('tramite-movimientos-sector')  
   async findTramiteConMovimientosXSector(
     @Req()
     req: Request
@@ -31,6 +30,7 @@ export class TramitesController {
     
     let sector: number = parseInt(req.query.id_sector.toString());
     if(isNaN(sector)) throw new NotFoundException("El id de sector no es un entero");
+    if(sector==1) throw new NotFoundException("El id de sector enviado no esta asignado a un sector");
     return this.tramitesService.findTramiteXSector(sector);
   }
 

@@ -80,7 +80,7 @@ export class Usuario {
     @Column({
         type: 'simple-array',
         nullable: true,
-        default: ()=>['NORMAL'] 
+        //default: ()=>['NORMAL'] 
     })
     roles: string[];
 

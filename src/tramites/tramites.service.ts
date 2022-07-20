@@ -25,15 +25,29 @@ export class TramitesService {
   //BUSCAR TRAMITE X SECTOR
   async findTramiteXSector(id_sector:number) {
     //buscar existencia de movimientos para este sector
-    const movimientos = await this.tramitesRepository.findAndCount(
-      
-      {
-        relations: ['movimientos'],
-        where: {
-          sector_id: id_sector
-        }
-      }
-    );
+    
+    // const movimientos = await this.tramitesRepository.findAndCount({        
+    //     where:{
+    //       movimientos: {
+    //         sector_id: id_sector
+    //       }
+    //     },
+    //     // where: {sector_id: id_sector},
+    //     relations: ['movimientos'],    
+    // });
+
+
+    const movimientos = await this.tramitesRepository.createQueryBuilder('tramites')
+    .leftJoin('tramites.movimientos', 'movim')
+    .leftJoinAndSelect('tramites.sector', 'sector')
+    .leftJoinAndSelect('tramites.tipo_tramite', 'tipo_tramite')
+    .leftJoinAndSelect('tramites.usuario', 'usuario')
+    .where('movim.sector_origen_id = :id', { id: id_sector })
+    .orWhere('movim.sector_id = :id', { id: id_sector })
+    .orWhere('movim.sector_destino_id = :id', { id: id_sector })
+    .getManyAndCount();
+
+
     // console.log("array 1", movimientos[1]);    
     // if (!movimientos) throw new NotFoundException("No se encontró el registro de movimiento de tramite solicitado.");
     
