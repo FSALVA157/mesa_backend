@@ -26,11 +26,11 @@ export class MovimientoTramite {
     })
     tramite_numero: number;
    
-    @ManyToOne(type => Tramite,{eager : true})
+    @ManyToOne(type => Tramite,{eager : false})
     @JoinColumn({
         name: 'tramite_numero',
         referencedColumnName: 'numero_tramite'
-    })
+    })    
     tramite: Tramite;
     //FIN TRAMITE
 
@@ -73,7 +73,8 @@ export class MovimientoTramite {
     //SECTOR DESTINO    
     @Column({
         type: 'int',
-        nullable: false
+        nullable: false,
+        default:1
     })
     sector_destino_id: number;
 
@@ -118,7 +119,7 @@ export class MovimientoTramite {
         default: false,
         nullable: false
     })
-    recibido: boolean;
+    recibido_destino: boolean;
 
     @Column({
         type: 'bool',
