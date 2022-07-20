@@ -16,10 +16,10 @@ export enum AppRoles {
       //.createOwn('usuario') // equivalent to .createOwn('video', ['*'])
       //.deleteOwn('usuario')
       .updateOwn([AppResources.USUARIO])
-      .readOwn([AppResources.USUARIO])
+      .readAny([AppResources.USUARIO])
     .grant(AppRoles.ADMIN) // switch to another role without breaking the chain
       .extend(AppRoles.NORMAL) // inherit role capabilities. also takes an array
       .updateAny([AppResources.USUARIO]) // explicitly defined attributes
       .deleteAny([AppResources.USUARIO])
       .createAny([AppResources.USUARIO])
-      .readAny([AppResources.USUARIO])
+      //.readAny([AppResources.USUARIO])

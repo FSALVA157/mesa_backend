@@ -51,7 +51,8 @@ export class UsuariosController {
   }
 
     
-  @UseGuards(JwtAuthGuard)
+  
+  @UseGuards(JwtAuthGuard, ACGuard)
   @Patch(':id')
   update(
     @Param('id')
@@ -63,7 +64,7 @@ export class UsuariosController {
        }
 
   
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, ACGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usuariosService.remove(+id);

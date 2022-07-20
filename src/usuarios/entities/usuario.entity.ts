@@ -1,6 +1,8 @@
 import { IsOptional } from "class-validator";
 import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import  *  as  bcrypt  from  'bcrypt';
+import { AppRoles } from "src/auth/roles/app.roles";
+import { APP_FILTER } from "@nestjs/core";
 
 @Entity()
 export class Usuario {
@@ -78,7 +80,7 @@ export class Usuario {
     @Column({
         type: 'simple-array',
         nullable: true,
-        //default: "['ADMIN']"
+        default: ()=>['NORMAL'] 
     })
     roles: string[];
 
