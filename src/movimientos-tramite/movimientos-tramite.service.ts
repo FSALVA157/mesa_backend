@@ -60,6 +60,9 @@ export class MovimientosTramiteService {
     const respuesta = await this.movimientosTramiteRepository.findAndCount(
       {where: {
           tramite_numero: num_tramite
+        },
+        order:{
+          num_movimiento_tramite: "DESC"
         }
       }
     );
@@ -75,7 +78,10 @@ export class MovimientosTramiteService {
       {where: {
           tramite_numero: num_tramite,
           sector_destino_id: id_sector
-        }
+        },
+        order:{
+          num_movimiento_tramite: "DESC"
+      }
       }
     );
     console.log("array 1", movimientos[1]);    
