@@ -58,7 +58,10 @@ export class MovimientosTramiteService {
   //BUSCAR HISTORIAL DEL TRAMITE XNUM_TRAMITE
   async findHistorial(num_tramite: number) {
     const respuesta = await this.movimientosTramiteRepository.findAndCount(
-      {where: {
+      
+      {
+        relations: ['tramite'],
+        where: {
           tramite_numero: num_tramite
         },
         order:{
