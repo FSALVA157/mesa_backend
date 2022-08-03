@@ -167,6 +167,7 @@ export class MovimientosTramiteService {
   //FIN BUSCAR MOVIMIENTO DEL TRAMITE XID..................................................................
 
   //CREAR MOVIMIENTO DEL TRAMITE
+  
   async create(data: Partial<CreateMovimientoTramiteDto>): Promise<MovimientoTramite> {
     let num_nuevo:number = 0;         
     
