@@ -91,6 +91,18 @@ export class MovimientosTramiteController {
   }
   //BUSCAR MOVIMIENTOS ENVIADOS Xsector.....................................................
 
+  //BUSCAR MOVIMIENTOS ENVIADOS Xsector
+  @Get('bandeja-entrada')
+  async findTodosDestinadosAlSector(
+    @Req()
+    req: Request
+  ) {
+    let sector: number = parseInt(req.query.id_sector.toString());
+    if(isNaN(sector)) throw new NotFoundException("El id de sector no es un número entero");
+    return this.movimientosTramiteService.findTodosDestinadosAlSector(sector);
+  }
+  //BUSCAR MOVIMIENTOS ENVIADOS Xsector.....................................................
+
   //BUSCAR MOVIMIENTO DEL TRAMITE XID
   @Get(':id')
   async findOne(@Param('id') id: string) {    

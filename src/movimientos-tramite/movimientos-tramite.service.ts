@@ -154,7 +154,22 @@ export class MovimientosTramiteService {
     
     return movimientos;
   }
-  //FIN B//BUSCAR MOVIMIENTOS RECIBIDOS X SECTOR..................................................................
+  //FIN BUSCAR MOVIMIENTOS RECIBIDOS X SECTOR..................................................................
+
+  //BUSCAR MOVIMIENTOS RECIBIDOS X SECTOR
+  async findTodosDestinadosAlSector(id_sector:number) {
+    const movimientos = await this.movimientosTramiteRepository.findAndCount(
+      {
+        relations: ['tramite'],
+        where: {          
+          sector_destino_id: id_sector
+        }
+      }
+    );   
+    
+    return movimientos;
+  }
+  //FIN BUSCAR MOVIMIENTOS RECIBIDOS X SECTOR..................................................................
 
 
   //BUSCAR MOVIMIENTO DEL TRAMITE XID
@@ -166,8 +181,7 @@ export class MovimientosTramiteService {
   }
   //FIN BUSCAR MOVIMIENTO DEL TRAMITE XID..................................................................
 
-  //CREAR MOVIMIENTO DEL TRAMITE
-  
+  //CREAR MOVIMIENTO DEL TRAMITE  
   async create(data: Partial<CreateMovimientoTramiteDto>): Promise<MovimientoTramite> {
     let num_nuevo:number = 0;         
     
