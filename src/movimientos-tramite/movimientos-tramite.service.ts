@@ -84,7 +84,7 @@ export class MovimientosTramiteService {
         },
         order:{
           num_movimiento_tramite: "DESC"
-      }
+        }
       }
     );
     console.log("array 1", movimientos[1]);    
@@ -163,6 +163,9 @@ export class MovimientosTramiteService {
         relations: ['tramite'],
         where: {          
           sector_destino_id: id_sector
+        },
+        order:{
+          num_movimiento_tramite: "DESC"
         }
       }
     );   
