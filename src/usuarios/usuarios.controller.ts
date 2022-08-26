@@ -29,6 +29,7 @@ export class UsuariosController {
         possession: 'any',
         resource: 'USUARIO'
    })
+
   @UseGuards(JwtAuthGuard)  
   @Get()
   findAll() {
