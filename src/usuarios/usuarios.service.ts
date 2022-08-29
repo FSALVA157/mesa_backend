@@ -27,7 +27,12 @@ export class UsuariosService {
 
   async findAll(): Promise<[Usuario[], number]> {
     try {
-      return await this.usuarioRepository.findAndCount();
+      return await this.usuarioRepository.findAndCount(
+        // {
+        //   relations: ['sector'],
+          
+        // }
+      );
       
     } catch (error) {
       throw new BadRequestException('Error al Listar Usuarios', error.message);

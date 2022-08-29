@@ -1,8 +1,9 @@
 import { IsOptional } from "class-validator";
-import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import  *  as  bcrypt  from  'bcrypt';
 import { AppRoles } from "src/auth/roles/app.roles";
 import { APP_FILTER } from "@nestjs/core";
+import { Sector } from "src/sectores/entities/sector.entity";
 
 @Entity()
 export class Usuario {
@@ -71,11 +72,20 @@ export class Usuario {
     @IsOptional()
     vigente: boolean;
 
+    //SECTOR
     @Column({
         type: "int",
         nullable: false
     })
     sector_id: number;
+
+    @ManyToOne(type => Sector,{eager : true})
+    @JoinColumn({
+        name: 'sector_id',
+        referencedColumnName: 'id_sector'
+    })
+    sector: Sector;
+    //FIN SECTOR
 
     @Column({
         type: 'simple-array',
