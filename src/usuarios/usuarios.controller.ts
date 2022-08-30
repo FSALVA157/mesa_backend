@@ -26,14 +26,14 @@ export class UsuariosController {
     return this.usuariosService.create(createUsuarioDto);
   }
 
-  //  @UseGuards(ACGuard)
-  //  @UseRoles({
-  //       action: 'read',
-  //       possession: 'any',
-  //       resource: 'USUARIO'
-  //  })
+   @UseGuards(ACGuard)
+   @UseRoles({
+        action: 'read',
+        possession: 'any',
+        resource: 'USUARIO'
+   })
 
-  //@UseGuards(JwtAuthGuard)  
+  @UseGuards(JwtAuthGuard)  
   @Get()
   findAll() {
     return this.usuariosService.findAll();
