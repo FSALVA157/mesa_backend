@@ -162,9 +162,11 @@ export class MovimientosTramiteController {
     data.fecha_ingreso = new Date();    
     data.enviado= false;
     data.recibido_destino= false;
+    console.log("antes de crear");
     try{
+      
       movimiento_nuevo= await this.movimientosTramiteService.create(data);
-
+      console.log("despues de crear");
       //actualizar como recibido el movimiento anterior
       movimiento_anterior.recibido_destino=true;
       try{
