@@ -142,7 +142,6 @@ export class MovimientoTramite {
         referencedColumnName: 'id_sector'
     })
     sector: Sector;
-
     //FIN SECTOR
 
     //USUARIO
