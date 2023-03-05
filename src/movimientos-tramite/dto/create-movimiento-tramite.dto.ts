@@ -1,4 +1,4 @@
-import { IsDateString, IsInt, IsNotEmpty, IsString, MaxLength, MinLength, IsBoolean, IsEmpty, IsOptional, Length, Min, Max } from 'class-validator';
+import { IsDateString, IsInt, IsNotEmpty, IsString, MaxLength, MinLength, IsBoolean, IsEmpty, IsOptional, Length, Min, Max, Matches } from 'class-validator';
 
 export class CreateMovimientoTramiteDto {
     
@@ -13,16 +13,13 @@ export class CreateMovimientoTramiteDto {
     
     //@IsDateString()
     fecha_ingreso: Date
-   
-    @IsInt({message: "El campo Fojas ingreso debe ser entero"})
-    @Min(0,{message: 'Las Fojas ingreso debe ser 0(cero) o mayor'})
-    @Max(10000,{message: 'La Fojas ingreso no debe ser mayor a 10000(cero)'})
-    fojas_ingreso: number;
-   
     
-    @IsNotEmpty()        
+    @Matches(RegExp('^[0-9]+$'),{message:'Fojas ingreso debe ser un número entero'})
+    @Max(10000,{message: 'Fojas ingreso no debe ser mayor a 10000(diez mil)'})
+    @Min(0,{message: 'Fojas ingreso debe ser 0(cero) o mayor'})    
+    fojas_ingreso: number;
+           
     @Length(1,500,{message:'La Descripción ingreso debe tener entre $constraint1 y $constraint2 caracteres'})
-    @IsString({message:'La Descripción ingreso debe ser formada por texto'})
     descripcion_ingreso: string;
 
     @IsOptional()
