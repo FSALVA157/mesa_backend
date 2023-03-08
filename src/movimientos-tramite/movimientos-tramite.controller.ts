@@ -105,7 +105,6 @@ export class MovimientosTramiteController {
     return this.movimientosTramiteService.findAll();
   }
   //FIN BUSCAR TODOS LOS MOVIMIENTO DEL TRAMITE............................................
-
   
   //BUSCAR HISTORIAL MOVIMIENTO DEL TRAMITE Xnum tramite
   @Get('/historial-tramite/:num_tramite')
