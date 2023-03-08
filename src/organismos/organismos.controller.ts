@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
 import { OrganismosService } from './organismos.service';
 import { CreateOrganismoDto } from './dto/create-organismo.dto';
 import { UpdateOrganismoDto } from './dto/update-organismo.dto';
@@ -18,17 +18,17 @@ export class OrganismosController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.organismosService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.organismosService.findOne(id);
   }
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() updateOrganismoDto: UpdateOrganismoDto) {
+  @Patch(':id')
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateOrganismoDto: UpdateOrganismoDto) {
     return this.organismosService.update(+id, updateOrganismoDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.organismosService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.organismosService.remove(id);
   }
 }

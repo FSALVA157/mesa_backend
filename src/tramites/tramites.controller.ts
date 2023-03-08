@@ -70,7 +70,7 @@ export class TramitesController {
   }
   //FIN PRUEBA DE CREAR EL TRAMITE Y MOVIMIENTO
 
-  @Put(':id')
+  @Patch(':id')
   update(@Param('id') id: string, @Body() updateTramiteDto: UpdateTramiteDto) {
     return this.tramitesService.update(+id, updateTramiteDto);
   }

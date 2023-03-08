@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, NotFoundException, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, NotFoundException, Req, ParseIntPipe, BadRequestException } from '@nestjs/common';
 import { MovimientosTramiteService } from './movimientos-tramite.service';
 import { CreateMovimientoTramiteDto } from './dto/create-movimiento-tramite.dto';
 import { UpdateMovimientoTramiteDto } from './dto/update-movimiento-tramite.dto';
@@ -17,6 +17,86 @@ export class MovimientosTramiteController {
     private readonly sectorRepository: Repository<Sector>,
     ) {}
 
+  //CREAR MOVIMIENTO DEL TRAMITE
+  @Post()
+  create(
+    @Body() 
+    data: CreateMovimientoTramiteDto
+    ) {    
+    //cargar datos por defecto
+    data.sector_destino_id= 1;
+    data.fecha_ingreso = new Date();    
+    data.enviado= false;
+
+    return this.movimientosTramiteService.create(data);
+  }
+  //FIN CREAR MOVIMIENTO DEL TRAMITE........................................................
+  
+  //RECIBIR MOVIMIENTO DEL TRAMITE
+  @Post('recibir-tramite')
+  async recibir_tramite (
+    @Body() 
+    data: CreateMovimientoTramiteDto,
+    @Param('num_mov_anterior', ParseIntPipe) num_mov_anterior: number,
+    // @Req()
+    // req: Request
+  ): Promise<MovimientoTramite> {    
+   
+    // let num_mov_anterior: number = parseInt(req.query.num_mov_anterior.toString());
+    // if(isNaN(num_mov_anterior)) throw new NotFoundException("El número de movimiento no es un entero");
+    
+    //buscar movimiento anterior
+    let movimiento_anterior: MovimientoTramite;
+    try{
+      movimiento_anterior= await this.movimientosTramiteService.findOneXNumMov(num_mov_anterior);
+      
+      //controles en el ultimo movimiento del tramite
+      if (movimiento_anterior.tramite_numero != data.tramite_numero) throw new NotFoundException("El N° de tramite para el nuevo movimiento es distinto al N° de tramite del movimiento que quiere recibir.");
+      
+      if(!movimiento_anterior.enviado) throw new NotFoundException ("El tramite no fue enviado por el último sector que lo recibió.");
+
+      if(movimiento_anterior.recibido_destino) throw new NotFoundException ("El tramite ya fue recibido en el destino.");
+
+      if(movimiento_anterior.sector_id != data.sector_origen_id) throw new NotFoundException ("El sector de origen para el nuevo movimiento es distino al sector que envió el movimiento que quiere recibir.");
+      
+      if(movimiento_anterior.sector_destino_id != data.sector_id) throw new NotFoundException ("Sólo el sector destino puede recibir el tramite");
+    
+      
+    }catch (error){
+      throw new NotFoundException('Error buscando el movimiento anterior: ',error.message);
+    }
+    
+    //guardar/recibir tramite
+    let movimiento_nuevo: MovimientoTramite;
+    //cargar datos por defecto
+    data.tramite_numero = movimiento_anterior.tramite_numero;
+    data.sector_origen_id = movimiento_anterior.sector_id;
+    data.fecha_ingreso = new Date();  
+    data.sector_destino_id= 1;    
+    data.fecha_salida = null;   
+    data.enviado= false;
+    data.recibido_destino= false;
+    console.log("antes de crear");
+    try{
+      
+      movimiento_nuevo= await this.movimientosTramiteService.create(data);
+      console.log("despues de crear");
+      //actualizar como recibido el movimiento anterior
+      movimiento_anterior.recibido_destino=true;
+      try{
+        this.movimientosTramiteService.update(movimiento_anterior.id_movimiento_tramite, movimiento_anterior);
+      }catch(error){
+        throw new NotFoundException('Error al cambiar estado recibido del tramite: ',error.message);
+      }
+      
+    }catch (error){
+      throw new NotFoundException('Error al recibir el tramite: ',error.message);
+    }
+
+    // return this.movimientosTramiteService.create(data);
+    return movimiento_nuevo;
+  }
+  //FIN RECIBIR MOVIMIENTO DEL TRAMITE.......................................................
 
   
   //BUSCAR TODOS LOS MOVIMIENTO DEL TRAMITE
@@ -110,83 +190,10 @@ export class MovimientosTramiteController {
     return this.movimientosTramiteService.findOne(+id);
   }
   //BUSCAR MOVIMIENTO DEL TRAMITE XID......................................................
-
-
-  //CREAR MOVIMIENTO DEL TRAMITE
-  @Post()
-  create(
-    @Body() 
-    data: CreateMovimientoTramiteDto
-    ) {    
-    //cargar datos por defecto
-    data.sector_destino_id= 1;
-    data.fecha_ingreso = new Date();    
-    data.enviado= false;
-
-    return this.movimientosTramiteService.create(data);
-  }
-  //FIN CREAR MOVIMIENTO DEL TRAMITE........................................................
-  
-  //RECIBIR MOVIMIENTO DEL TRAMITE
-  @Post('recibir-tramite')
-  async recibir_tramite (
-    @Body() 
-    data: CreateMovimientoTramiteDto,
-    @Req()
-    req: Request
-  ): Promise<MovimientoTramite> {    
-   
-    let num_mov_anterior: number = parseInt(req.query.num_mov_anterior.toString());
-    if(isNaN(num_mov_anterior)) throw new NotFoundException("El número de movimiento no es un entero");
-    
-    //buscar movimiento anterior
-    let movimiento_anterior: MovimientoTramite;
-    try{
-      movimiento_anterior= await this.movimientosTramiteService.findOneXNumMov(num_mov_anterior);
-      //controles en el ultimo movimiento del tramite
-      if(!movimiento_anterior.enviado){
-        throw new NotFoundException ("El tramite no fue enviado por el último sector que lo recibió");
-      }
-
-      if(movimiento_anterior.sector_destino_id != data.sector_id){
-        throw new NotFoundException ("Sólo el sector destino puede recibir el tramite");
-      }
-    }catch (error){
-      throw new NotFoundException('Error buscando el movimiento anterior: ',error.message);
-    }
-    
-    //guardar/recibir tramite
-    let movimiento_nuevo: MovimientoTramite;
-    //cargar datos por defecto
-    data.sector_destino_id= 1;
-    data.fecha_ingreso = new Date();    
-    data.enviado= false;
-    data.recibido_destino= false;
-    console.log("antes de crear");
-    try{
-      
-      movimiento_nuevo= await this.movimientosTramiteService.create(data);
-      console.log("despues de crear");
-      //actualizar como recibido el movimiento anterior
-      movimiento_anterior.recibido_destino=true;
-      try{
-        this.movimientosTramiteService.update(movimiento_anterior.id_movimiento_tramite, movimiento_anterior);
-      }catch(error){
-        throw new NotFoundException('Error al cambiar estado recibido del tramite: ',error.message);
-      }
-      
-    }catch (error){
-      throw new NotFoundException('Error al recibir el tramite: ',error.message);
-    }
-
-    // return this.movimientosTramiteService.create(data);
-    return movimiento_nuevo;
-  }
-  //FIN RECIBIR MOVIMIENTO DEL TRAMITE.......................................................
   
   
   //SALIDA MOVIMIENTO DEL TRAMITE
-  @Put('tramite-salida')
+  @Patch('tramite-salida')
   async movimiento_salida(
     // @Param('num_movimiento') 
     // num_movimiento: string, 
@@ -236,16 +243,16 @@ export class MovimientosTramiteController {
   }
   //FIN SALIDA MOVIMIENTO DEL TRAMITE........................................................
 
-  @Put(':id')
+  @Patch(':id')
   update(
-    @Param('id') id: string, 
+    @Param('id', ParseIntPipe) id: number, 
     @Body() updateMovimientosTramiteDto: UpdateMovimientoTramiteDto
     ) {
-    return this.movimientosTramiteService.update(+id, updateMovimientosTramiteDto);
+    return this.movimientosTramiteService.update(id, updateMovimientosTramiteDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.movimientosTramiteService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.movimientosTramiteService.remove(id);
   }
 }
