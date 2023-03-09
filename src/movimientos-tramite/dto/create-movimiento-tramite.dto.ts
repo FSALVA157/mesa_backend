@@ -1,5 +1,6 @@
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import { IsDateString, IsInt, IsNotEmpty, IsString, MaxLength, MinLength, IsBoolean, IsEmpty, IsOptional, Length, Min, Max, Matches, IsNumber, IsDivisibleBy, IsNumberString, IsDecimal } from 'class-validator';
+import { ParseIntPipe } from '@nestjs/common';
 
 
 
@@ -19,9 +20,9 @@ export class CreateMovimientoTramiteDto {
     
     //@Matches(/^[0-9]*$/,{message:'Fojas ingreso debe ser un número entero'})
     
-    @Max(10000,{message: 'El valor máximo para fojas-ingreso es 10000(diez mil)'})
-    @Min(0,{message: 'El valor mínimo para fojas-ingreso es 0(cero)'})    
-    @IsInt({message: "Fojas ingreso debe ser un número entero"})
+    // @Max(10000,{message: 'El valor máximo para fojas-ingreso es 10000(diez mil)'})
+    // @Min(0,{message: 'El valor mínimo para fojas-ingreso es 0(cero)'})  
+    @IsInt({ message: 'myInt debe ser un número entero' }) // Validar entero
     fojas_ingreso: number;
            
     @Length(1,500,{message:'La Descripción ingreso debe tener entre $constraint1 y $constraint2 caracteres'})
