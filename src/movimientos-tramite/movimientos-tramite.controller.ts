@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, NotFoundException, Req, ParseIntPipe, BadRequestException } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, ParseIntPipe, Patch, Post, Req } from '@nestjs/common';
 import { MovimientosTramiteService } from './movimientos-tramite.service';
 import { CreateMovimientoTramiteDto } from './dto/create-movimiento-tramite.dto';
 import { UpdateMovimientoTramiteDto } from './dto/update-movimiento-tramite.dto';
@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Sector } from 'src/sectores/entities/sector.entity';
 import { Repository } from 'typeorm';
 import { Request } from 'express';
+
 
 
 @Controller('movimientos-tramite')
@@ -35,15 +36,17 @@ export class MovimientosTramiteController {
   //RECIBIR MOVIMIENTO DEL TRAMITE
   @Post('recibir-tramite')
   async recibir_tramite (
+    //@Param('num_mov_anterior',ParseIntPipe) num_mov_anterior: number,
     @Body() 
-    data: CreateMovimientoTramiteDto,
-    @Param('num_mov_anterior', ParseIntPipe) num_mov_anterior: number,
-    // @Req()
-    // req: Request
+    data: CreateMovimientoTramiteDto,    
+    @Req()
+    req: Request
   ): Promise<MovimientoTramite> {    
    
-    // let num_mov_anterior: number = parseInt(req.query.num_mov_anterior.toString());
-    // if(isNaN(num_mov_anterior)) throw new NotFoundException("El número de movimiento no es un entero");
+    console.log("data movimiento", data);
+    //console.log("num_mov_anterior", num_mov_anterior);
+    let num_mov_anterior: number = parseInt(req.query.num_mov_anterior.toString());
+    if(isNaN(num_mov_anterior)) throw new NotFoundException("El número de movimiento no es un entero");
     
     //buscar movimiento anterior
     let movimiento_anterior: MovimientoTramite;
@@ -63,7 +66,7 @@ export class MovimientosTramiteController {
     
       
     }catch (error){
-      throw new NotFoundException('Error buscando el movimiento anterior: ',error.message);
+      throw new NotFoundException('Error buscando el movimiento anterior: ',error);
     }
     
     //guardar/recibir tramite
@@ -162,10 +165,11 @@ export class MovimientosTramiteController {
   @Get('enviados')
   async findEnviadosXSector(
     @Req()
-    req: Request
+    req: Request,
   ) {
     let sector: number = parseInt(req.query.id_sector.toString());
     if(isNaN(sector)) throw new NotFoundException("El id de sector no es un número entero");
+    
     return this.movimientosTramiteService.findEnviadosXSector(sector);
   }
   //BUSCAR MOVIMIENTOS ENVIADOS Xsector.....................................................
