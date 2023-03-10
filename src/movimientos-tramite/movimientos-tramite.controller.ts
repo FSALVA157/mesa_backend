@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, NotFoundException, Req, ParseIntPipe, BadRequestException } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, ParseIntPipe, Patch, Post, Query, Req } from '@nestjs/common';
 import { MovimientosTramiteService } from './movimientos-tramite.service';
 import { CreateMovimientoTramiteDto } from './dto/create-movimiento-tramite.dto';
 import { UpdateMovimientoTramiteDto } from './dto/update-movimiento-tramite.dto';
@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Sector } from 'src/sectores/entities/sector.entity';
 import { Repository } from 'typeorm';
 import { Request } from 'express';
+
 
 
 @Controller('movimientos-tramite')
@@ -35,37 +36,32 @@ export class MovimientosTramiteController {
   //RECIBIR MOVIMIENTO DEL TRAMITE
   @Post('recibir-tramite')
   async recibir_tramite (
+    @Query('num_mov_anterior', ParseIntPipe) num_mov_anteriorx: number, 
+    @Req()
+    req: Request,
     @Body() 
-    data: CreateMovimientoTramiteDto,
-    @Param('num_mov_anterior', ParseIntPipe) num_mov_anterior: number,
-    // @Req()
-    // req: Request
-  ): Promise<MovimientoTramite> {    
+    data: CreateMovimientoTramiteDto   
+  ): Promise<MovimientoTramite> {
    
-    // let num_mov_anterior: number = parseInt(req.query.num_mov_anterior.toString());
-    // if(isNaN(num_mov_anterior)) throw new NotFoundException("El número de movimiento no es un entero");
+    let num_mov_anterior: number = parseInt(req.query.num_mov_anterior.toString());
+    if(isNaN(num_mov_anterior)) throw new NotFoundException("El número-movimiento-anterior debe ser un entero");
     
     //buscar movimiento anterior
     let movimiento_anterior: MovimientoTramite;
     try{
-      movimiento_anterior= await this.movimientosTramiteService.findOneXNumMov(num_mov_anterior);
-      
-      //controles en el ultimo movimiento del tramite
-      if (movimiento_anterior.tramite_numero != data.tramite_numero) throw new NotFoundException("El N° de tramite para el nuevo movimiento es distinto al N° de tramite del movimiento que quiere recibir.");
-      
-      if(!movimiento_anterior.enviado) throw new NotFoundException ("El tramite no fue enviado por el último sector que lo recibió.");
-
-      if(movimiento_anterior.recibido_destino) throw new NotFoundException ("El tramite ya fue recibido en el destino.");
-
-      if(movimiento_anterior.sector_id != data.sector_origen_id) throw new NotFoundException ("El sector de origen para el nuevo movimiento es distino al sector que envió el movimiento que quiere recibir.");
-      
-      if(movimiento_anterior.sector_destino_id != data.sector_id) throw new NotFoundException ("Sólo el sector destino puede recibir el tramite");
-    
+      movimiento_anterior= await this.movimientosTramiteService.findOneXNumMov(num_mov_anterior);      
       
     }catch (error){
-      throw new NotFoundException('Error buscando el movimiento anterior: ',error.message);
+      throw new NotFoundException('Error buscando el movimiento anterior', error.message);
     }
-    
+
+    //controles en el ultimo movimiento del tramite
+    if (movimiento_anterior.tramite_numero != data.tramite_numero) throw new NotFoundException("El N° de tramite para el nuevo movimiento es distinto al N° de tramite del movimiento que quiere recibir.");
+      
+    if(movimiento_anterior.recibido_destino) throw new NotFoundException ("El tramite ya fue recibido en el destino.");
+
+    if(movimiento_anterior.sector_destino_id != data.sector_id) throw new NotFoundException ("Sólo el sector destino puede recibir el tramite");
+      
     //guardar/recibir tramite
     let movimiento_nuevo: MovimientoTramite;
     //cargar datos por defecto
@@ -76,11 +72,9 @@ export class MovimientosTramiteController {
     data.fecha_salida = null;   
     data.enviado= false;
     data.recibido_destino= false;
-    console.log("antes de crear");
     try{
       
       movimiento_nuevo= await this.movimientosTramiteService.create(data);
-      console.log("despues de crear");
       //actualizar como recibido el movimiento anterior
       movimiento_anterior.recibido_destino=true;
       try{
@@ -109,11 +103,11 @@ export class MovimientosTramiteController {
   //BUSCAR HISTORIAL MOVIMIENTO DEL TRAMITE Xnum tramite
   @Get('/historial-tramite/:num_tramite')
   async findHistorialTramite(
-    @Param('num_tramite') 
-    num_tramite: string
+    @Param('num_tramite', ParseIntPipe) num_tramite: string
   ) {
-    let numero_tramite: number = parseInt(num_tramite.toString());
-    if(isNaN(numero_tramite)) throw new NotFoundException("El número de tramite no es un entero");
+    
+    let numero_tramite: number = parseInt(num_tramite.toString());    
+    
     return this.movimientosTramiteService.findHistorial(numero_tramite);
   }
   //BUSCAR HISTORIAL MOVIMIENTO DEL TRAMITE XID......................................................
@@ -153,7 +147,7 @@ export class MovimientosTramiteController {
     req: Request
   ) {
     let sector: number = parseInt(req.query.id_sector.toString());
-    if(isNaN(sector)) throw new NotFoundException("El id de sector no es un número entero");
+    if(isNaN(sector)) throw new NotFoundException("El id de sector debe ser un número entero");
     return this.movimientosTramiteService.findRecibidosXSector(sector);
   }
   //BUSCAR MOVIMIENTOS RECIBIDOS Xsector.....................................................
@@ -161,11 +155,13 @@ export class MovimientosTramiteController {
   //BUSCAR MOVIMIENTOS ENVIADOS Xsector
   @Get('enviados')
   async findEnviadosXSector(
+    @Query('id_sector', ParseIntPipe) id_sector:number,
     @Req()
-    req: Request
+    req: Request,
   ) {
     let sector: number = parseInt(req.query.id_sector.toString());
-    if(isNaN(sector)) throw new NotFoundException("El id de sector no es un número entero");
+    if(isNaN(sector)) throw new NotFoundException("El id de sector debe ser un número entero");
+    
     return this.movimientosTramiteService.findEnviadosXSector(sector);
   }
   //BUSCAR MOVIMIENTOS ENVIADOS Xsector.....................................................
@@ -181,6 +177,11 @@ export class MovimientosTramiteController {
     return this.movimientosTramiteService.findTodosDestinadosAlSector(sector);
   }
   //BUSCAR MOVIMIENTOS ENVIADOS Xsector.....................................................
+
+  @Get('*')
+  rutasNoDefinidas() {
+    throw new NotFoundException('No se encontro la ruta especificada. Verifique si la ruta es correcta');
+  }
 
   //BUSCAR MOVIMIENTO DEL TRAMITE XID
   @Get(':id')

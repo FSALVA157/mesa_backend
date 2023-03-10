@@ -18,8 +18,8 @@ export class OrganismosController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.organismosService.findOne(id);
+  findOne(@Param('id', ParseIntPipe) id: string) {
+    return this.organismosService.findOne(+id);
   }
 
   @Patch(':id')

@@ -190,7 +190,7 @@ export class MovimientosTramiteService {
     
     //Control de existencia del tramite
     const tramite_existe = await this.tramitesRepository.findOne({numero_tramite: data.tramite_numero});
-    if(!tramite_existe) throw new BadRequestException ("El número de tramite ingresado no existe.")
+    if(!tramite_existe) throw new NotFoundException ("El número de tramite ingresado no existe.")
     //FIN Control de existencia del tramite
     
     //obtener numero movimiento maximo
@@ -213,7 +213,7 @@ export class MovimientosTramiteService {
     } catch (error) {
       if(error.code=='ER_DUP_ENTRY'){
         const existe = await this.movimientosTramiteRepository.findOne({num_movimiento_tramite: data.num_movimiento_tramite});
-        if(existe) throw new BadRequestException ("El número de movimiento de tramite que se intentó crear ya existe. Intente guardar nuevamente");
+        if(existe) throw new BadRequestException ("El número de movimiento de tramite que se intentó generar ya existe. Intente guardar nuevamente");
       }      
       throw new NotFoundException('Error al crear el nuevo movimiento de tramite: ',error.message);  
     }   
@@ -229,7 +229,7 @@ export class MovimientosTramiteService {
       if((await respuesta).affected == 0) throw new NotFoundException("No se efectuó la salida del tramite. Intente nuevamente.");
       return respuesta;
     }catch(error){
-      throw new NotFoundException('Error al dar salida al tramite: ',error.message);
+      throw new BadRequestException('Error al dar salida al tramite: ',error.message);
     }    
   }
   //FIN SALIDA MOVIMIENTO DEL TRAMITE..............................................................................
