@@ -11,7 +11,7 @@ export class CreateMovimientoTramiteDto {
     @IsInt({message: "Número-tramite debe ser un número entero"})
     tramite_numero: number;
    
-    @IsInt({message: "Sector-origen debe ser un número entero"})
+    // @IsInt({message: "Sector-origen debe ser un número entero"})
     sector_origen_id: number;
     
     //@IsDateString()
@@ -27,12 +27,11 @@ export class CreateMovimientoTramiteDto {
     @Length(1,500,{message:'Descripción-ingreso debe tener entre $constraint1 y $constraint2 caracteres'})
     descripcion_ingreso: string;
 
-    @IsOptional()
-    @IsInt({message: "Sector-destino debe ser un número entero"})
+    // @IsOptional()
+    // @IsInt({message: "Sector-destino debe ser un número entero"})
     sector_destino_id: number;
-    
-    @IsOptional()
-    @IsDateString({message: "El formato de fecha-salida no es válido"})
+        
+    //@IsDateString({message: "El formato de fecha-salida no es válido"})
     fecha_salida: Date;
         
     // @Max(10000,{message: 'El valor máximo para fojas-salida es 10000(diez mil)'})
@@ -43,14 +42,13 @@ export class CreateMovimientoTramiteDto {
     
     descripcion_salida: string;
     
-    @IsEmpty({message: "No debe enviar el campo enviado"})
+    //@IsEmpty({message: "No debe enviar el campo enviado"})
     enviado: boolean;
 
-    @IsEmpty({message: "No debe enviar el campo recibido"})
-    //@IsBoolean()
+    //@IsEmpty({message: "No debe enviar el campo recibido"})
     recibido_destino: boolean;
     
-    @IsEmpty({message: "No debe enviar el campo impreso"})
+    //@IsEmpty({message: "No debe enviar el campo impreso"})
     impreso: boolean;
     
     @IsInt({message: "Sector debe ser un número entero"})
