@@ -9,7 +9,6 @@ import { Repository } from 'typeorm';
 import { Request } from 'express';
 
 
-
 @Controller('movimientos-tramite')
 export class MovimientosTramiteController {
   constructor(
@@ -21,9 +20,8 @@ export class MovimientosTramiteController {
   //CREAR MOVIMIENTO DEL TRAMITE
   @Post()
   create(
-    @Body() 
-    data: CreateMovimientoTramiteDto
-    ) {    
+    @Body() data: CreateMovimientoTramiteDto
+  ) {    
     //cargar datos por defecto
     data.sector_destino_id= 1;
     data.fecha_ingreso = new Date();    
@@ -37,10 +35,8 @@ export class MovimientosTramiteController {
   @Post('recibir-tramite')
   async recibir_tramite (
     @Query('num_mov_anterior', ParseIntPipe) num_mov_anteriorx: number, 
-    @Req()
-    req: Request,
-    @Body() 
-    data: CreateMovimientoTramiteDto   
+    @Req() req: Request,
+    @Body() data: CreateMovimientoTramiteDto   
   ): Promise<MovimientoTramite> {
    
     let num_mov_anterior: number = parseInt(req.query.num_mov_anterior.toString());
@@ -49,8 +45,7 @@ export class MovimientosTramiteController {
     //buscar movimiento anterior
     let movimiento_anterior: MovimientoTramite;
     try{
-      movimiento_anterior= await this.movimientosTramiteService.findOneXNumMov(num_mov_anterior);      
-      
+      movimiento_anterior= await this.movimientosTramiteService.findOneXNumMov(num_mov_anterior);    
     }catch (error){
       throw new NotFoundException('Error buscando el movimiento anterior', error.message);
     }
@@ -58,22 +53,25 @@ export class MovimientosTramiteController {
     //controles en el ultimo movimiento del tramite
     if (movimiento_anterior.tramite_numero != data.tramite_numero) throw new NotFoundException("El N° de tramite para el nuevo movimiento es distinto al N° de tramite del movimiento que quiere recibir.");
       
-    if(movimiento_anterior.recibido_destino) throw new NotFoundException ("El tramite ya fue recibido en el destino.");
+    if (movimiento_anterior.recibido_destino) throw new NotFoundException ("El tramite ya fue recibido en el destino.");
 
-    if(movimiento_anterior.sector_destino_id != data.sector_id) throw new NotFoundException ("Sólo el sector destino puede recibir el tramite");
+    if (movimiento_anterior.sector_id != data.sector_origen_id) throw new NotFoundException ("El sector de origen ingresado no es correcto");
+
+    if (movimiento_anterior.sector_destino_id != data.sector_id) throw new NotFoundException ("Sólo el sector destino puede recibir el tramite");
       
     //guardar/recibir tramite
     let movimiento_nuevo: MovimientoTramite;
+
     //cargar datos por defecto
     data.tramite_numero = movimiento_anterior.tramite_numero;
     data.sector_origen_id = movimiento_anterior.sector_id;
     data.fecha_ingreso = new Date();  
     data.sector_destino_id= 1;    
-    data.fecha_salida = null;   
+    data.fecha_salida = null;  
     data.enviado= false;
     data.recibido_destino= false;
-    try{
-      
+
+    try{      
       movimiento_nuevo= await this.movimientosTramiteService.create(data);
       //actualizar como recibido el movimiento anterior
       movimiento_anterior.recibido_destino=true;
@@ -81,8 +79,7 @@ export class MovimientosTramiteController {
         this.movimientosTramiteService.update(movimiento_anterior.id_movimiento_tramite, movimiento_anterior);
       }catch(error){
         throw new NotFoundException('Error al cambiar estado recibido del tramite: ',error.message);
-      }
-      
+      }      
     }catch (error){
       throw new NotFoundException('Error al recibir el tramite: ',error.message);
     }
@@ -117,8 +114,7 @@ export class MovimientosTramiteController {
   async findHistorialSector(
     // @Param('num_tramite') 
     // num_tramite: string,
-    @Req()
-    req: Request
+    @Req() req: Request
   ) {
     let num_tramite: number = parseInt(req.query.num_tramite.toString());
     if(isNaN(num_tramite)) throw new NotFoundException("El número de tramite no es un entero");
@@ -131,8 +127,7 @@ export class MovimientosTramiteController {
   //BUSCAR MOVIMIENTOS PENDIENTES Xsector
   @Get('pendientes')
   async findPendientesXSector(
-    @Req()
-    req: Request
+    @Req() req: Request
   ) {
     let sector: number = parseInt(req.query.id_sector.toString());
     if(isNaN(sector)) throw new NotFoundException("El id de sector no es un número entero");
@@ -143,8 +138,7 @@ export class MovimientosTramiteController {
   //BUSCAR MOVIMIENTOS RECIBIDOS Xsector
   @Get('recibidos')
   async findRecibidosXSector(
-    @Req()
-    req: Request
+    @Req() req: Request
   ) {
     let sector: number = parseInt(req.query.id_sector.toString());
     if(isNaN(sector)) throw new NotFoundException("El id de sector debe ser un número entero");
@@ -156,8 +150,7 @@ export class MovimientosTramiteController {
   @Get('enviados')
   async findEnviadosXSector(
     @Query('id_sector', ParseIntPipe) id_sector:number,
-    @Req()
-    req: Request,
+    @Req() req: Request,
   ) {
     let sector: number = parseInt(req.query.id_sector.toString());
     if(isNaN(sector)) throw new NotFoundException("El id de sector debe ser un número entero");
@@ -169,8 +162,7 @@ export class MovimientosTramiteController {
   //BUSCAR MOVIMIENTOS ENVIADOS Xsector
   @Get('bandeja-entrada')
   async findTodosDestinadosAlSector(
-    @Req()
-    req: Request
+    @Req() req: Request
   ) {
     let sector: number = parseInt(req.query.id_sector.toString());
     if(isNaN(sector)) throw new NotFoundException("El id de sector no es un número entero");
@@ -197,10 +189,8 @@ export class MovimientosTramiteController {
   async movimiento_salida(
     // @Param('num_movimiento') 
     // num_movimiento: string, 
-    @Body() 
-    data: UpdateMovimientoTramiteDto,
-    @Req()
-    req: Request
+    @Body() data: UpdateMovimientoTramiteDto,
+    @Req() req: Request
     ) {
       let num_mov: number;
       if(req.query.num_movimiento){

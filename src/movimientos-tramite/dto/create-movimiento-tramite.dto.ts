@@ -11,7 +11,7 @@ export class CreateMovimientoTramiteDto {
     @IsInt({message: "Número-tramite debe ser un número entero"})
     tramite_numero: number;
    
-    // @IsInt({message: "Sector-origen debe ser un número entero"})
+    @IsInt({message: "Sector-origen debe ser un número entero"})
     sector_origen_id: number;
     
     //@IsDateString()
