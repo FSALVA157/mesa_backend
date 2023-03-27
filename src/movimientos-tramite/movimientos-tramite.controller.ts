@@ -94,16 +94,16 @@ export class MovimientosTramiteController {
 
   
   //BUSCAR TODOS LOS MOVIMIENTO DEL TRAMITE
-  @Get()
-  findAll() {
-    return this.movimientosTramiteService.findAll();
-  }
+  //@Get()
+  // findAll() {
+  //   return this.movimientosTramiteService.findAll();
+  // }
   //FIN BUSCAR TODOS LOS MOVIMIENTO DEL TRAMITE............................................
   
   //BUSCAR HISTORIAL MOVIMIENTO DEL TRAMITE Xnum tramite
   @Get('/historial-tramite/:num_tramite')
   async findHistorialTramite(
-    @Param('num_tramite', ParseIntPipe) num_tramite: string
+    @Param('num_tramite', ParseIntPipe) num_tramite: number
   ) {
     
     let numero_tramite: number = parseInt(num_tramite.toString());    
@@ -178,16 +178,16 @@ export class MovimientosTramiteController {
   }
   //BUSCAR MOVIMIENTOS ENVIADOS Xsector.....................................................
 
-  @Get('*')
-  rutasNoDefinidas() {
-    throw new NotFoundException('No se encontro la ruta especificada. Verifique si la ruta es correcta');
-  }
+  // @Get('*')
+  // rutasNoDefinidas() {
+  //   throw new NotFoundException('No se encontro la ruta especificada. Verifique si la ruta es correcta');
+  // }
 
   //BUSCAR MOVIMIENTO DEL TRAMITE XID
   @Get(':id')
-  async findOne(@Param('id') id: string) {    
-    
-    return this.movimientosTramiteService.findOne(+id);
+  async findOne(@Param('id', ParseIntPipe) id: number) {    
+    console.log("vine a buscar por id");
+    return this.movimientosTramiteService.findOne(id);
   }
   //BUSCAR MOVIMIENTO DEL TRAMITE XID......................................................
   
