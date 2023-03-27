@@ -128,6 +128,7 @@ export class TramitesService {
     const respuesta = await this.tramitesRepository.update(id, data);
     if((await respuesta).affected == 0) throw new NotFoundException("No se modificó el registro de tramite.");
     return respuesta;
+    
   }
 
   async remove(id: number) {
