@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsDateString, IsInt, IsString, MaxLength, MinLength, IsBoolean, IsEmpty, IsOptional, Length, Min, Max,} from 'class-validator';
+import { IsDateString, IsInt, IsNotEmpty, IsString, MaxLength, MinLength, IsBoolean, IsEmpty, IsOptional, Length, Min, Max, Matches, IsNumber, IsDivisibleBy, IsNumberString, IsDecimal } from 'class-validator';
 
 
 
@@ -11,7 +11,7 @@ export class CreateMovimientoTramiteDto {
     @IsInt({message: "Número-tramite debe ser un número entero"})
     tramite_numero: number;
    
-    // @IsInt({message: "Sector-origen debe ser un número entero"})
+    @IsInt({message: "Sector-origen debe ser un número entero"})
     sector_origen_id: number;
     
     //@IsDateString()
