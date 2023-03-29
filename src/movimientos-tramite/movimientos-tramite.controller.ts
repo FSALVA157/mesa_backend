@@ -152,6 +152,7 @@ export class MovimientosTramiteController {
     @Query('id_sector', ParseIntPipe) id_sector:number,
     @Req() req: Request,
   ) {
+    
     let sector: number = parseInt(req.query.id_sector.toString());
     if(isNaN(sector)) throw new NotFoundException("El id de sector debe ser un número entero");
     
